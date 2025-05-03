@@ -172,6 +172,7 @@
         <module>bookborrow-quartz</module>
         <module>bookborrow-generator</module>
         <module>bookborrow-common</module>
+        <module>bookborrow-book</module>
     </modules>
     <packaging>pom</packaging>
 

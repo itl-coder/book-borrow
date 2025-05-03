@@ -16,7 +16,11 @@
     </description>
 
     <dependencies>
-
+        <dependency>
+            <groupId>com.bookborrow</groupId>
+            <artifactId>bookborrow-book</artifactId>
+            <version>3.8.7</version>
+        </dependency>
         <!-- spring-boot-devtools -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

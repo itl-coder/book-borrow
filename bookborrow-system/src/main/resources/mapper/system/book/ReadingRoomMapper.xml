@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.book.borrow.readingroom.mapper.ReadingRoomMapper">
+    
+    <resultMap type="ReadingRoom" id="ReadingRoomResult">
+        <result property="id"    column="id"    />
+        <result property="roomName"    column="room_name"    />
+        <result property="location"    column="location"    />
+        <result property="totalSeats"    column="total_seats"    />
+        <result property="availableSeats"    column="available_seats"    />
+        <result property="isOpen"    column="is_open"    />
+        <result property="openingHours"    column="opening_hours"    />
+        <result property="description"    column="description"    />
+        <result property="coverImageUrl"    column="cover_image_url"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="isDeleted"    column="is_deleted"    />
+    </resultMap>
+
+    <sql id="selectReadingRoomVo">
+        select id, room_name, location, total_seats, available_seats, is_open, opening_hours, description, cover_image_url, create_time, update_time, is_deleted from reading_room
+    </sql>
+
+    <select id="selectReadingRoomList" parameterType="ReadingRoom" resultMap="ReadingRoomResult">
+        <include refid="selectReadingRoomVo"/>
+        <where>  
+            <if test="roomName != null  and roomName != ''"> and room_name like concat('%', #{roomName}, '%')</if>
+            <if test="location != null  and location != ''"> and location = #{location}</if>
+            <if test="totalSeats != null "> and total_seats = #{totalSeats}</if>
+            <if test="availableSeats != null "> and available_seats = #{availableSeats}</if>
+            <if test="isOpen != null "> and is_open = #{isOpen}</if>
+            <if test="openingHours != null  and openingHours != ''"> and opening_hours = #{openingHours}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="coverImageUrl != null  and coverImageUrl != ''"> and cover_image_url = #{coverImageUrl}</if>
+            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
+        </where>
+    </select>
+    
+    <select id="selectReadingRoomById" parameterType="Long" resultMap="ReadingRoomResult">
+        <include refid="selectReadingRoomVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertReadingRoom" parameterType="ReadingRoom" useGeneratedKeys="true" keyProperty="id">
+        insert into reading_room
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="roomName != null and roomName != ''">room_name,</if>
+            <if test="location != null">location,</if>
+            <if test="totalSeats != null">total_seats,</if>
+            <if test="availableSeats != null">available_seats,</if>
+            <if test="isOpen != null">is_open,</if>
+            <if test="openingHours != null">opening_hours,</if>
+            <if test="description != null">description,</if>
+            <if test="coverImageUrl != null">cover_image_url,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="roomName != null and roomName != ''">#{roomName},</if>
+            <if test="location != null">#{location},</if>
+            <if test="totalSeats != null">#{totalSeats},</if>
+            <if test="availableSeats != null">#{availableSeats},</if>
+            <if test="isOpen != null">#{isOpen},</if>
+            <if test="openingHours != null">#{openingHours},</if>
+            <if test="description != null">#{description},</if>
+            <if test="coverImageUrl != null">#{coverImageUrl},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+         </trim>
+    </insert>
+
+    <update id="updateReadingRoom" parameterType="ReadingRoom">
+        update reading_room
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="roomName != null and roomName != ''">room_name = #{roomName},</if>
+            <if test="location != null">location = #{location},</if>
+            <if test="totalSeats != null">total_seats = #{totalSeats},</if>
+            <if test="availableSeats != null">available_seats = #{availableSeats},</if>
+            <if test="isOpen != null">is_open = #{isOpen},</if>
+            <if test="openingHours != null">opening_hours = #{openingHours},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="coverImageUrl != null">cover_image_url = #{coverImageUrl},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteReadingRoomById" parameterType="Long">
+        delete from reading_room where id = #{id}
+    </delete>
+
+    <delete id="deleteReadingRoomByIds" parameterType="String">
+        delete from reading_room where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
