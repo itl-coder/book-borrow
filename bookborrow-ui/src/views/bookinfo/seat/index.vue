@@ -90,7 +90,17 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="是否已预约" align="center" prop="isReserved" show-overflow-tooltip/>
+      <el-table-column label="是否已预约" align="center" prop="isReserved">
+        <template #default="{ row }">
+          <el-tag
+            :type="row.isReserved === 1 ? 'danger' : 'success'"
+            disable-transitions
+          >
+            {{ row.isReserved === 1 ? '已预约' : '未预约' }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      d" show-overflow-tooltip/>
       <el-table-column label="座位描述" align="center" prop="description" show-overflow-tooltip/>
       <el-table-column label="逻辑删除标志" align="center" prop="isDeleted" show-overflow-tooltip/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
