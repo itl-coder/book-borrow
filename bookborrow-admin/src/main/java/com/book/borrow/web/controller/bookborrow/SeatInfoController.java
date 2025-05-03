@@ -2,6 +2,8 @@ package com.book.borrow.web.controller.bookborrow;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.book.borrow.seat.domain.vo.SeatInfoVo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

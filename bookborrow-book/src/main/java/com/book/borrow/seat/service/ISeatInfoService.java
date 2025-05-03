@@ -2,6 +2,7 @@ package com.book.borrow.seat.service;
 
 import java.util.List;
 import com.book.borrow.seat.domain.SeatInfo;
+import com.book.borrow.seat.domain.vo.SeatInfoVo;
 
 /**
  * 座位信息Service接口

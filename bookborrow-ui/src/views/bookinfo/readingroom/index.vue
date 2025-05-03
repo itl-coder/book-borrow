@@ -87,10 +87,10 @@
     <el-table v-loading="loading" :data="readingroomList" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="45"/>
       <el-table-column align="center" label="ID" prop="id"/>
-      <el-table-column align="center" label="阅览室名称" prop="roomName" show-overflow-tooltip/>
+      <el-table-column align="center" label="阅览室名称" width="120" prop="roomName" show-overflow-tooltip/>
       <el-table-column align="center" label="位置" prop="location" show-overflow-tooltip/>
       <el-table-column align="center" label="座位总数" prop="totalSeats" show-overflow-tooltip/>
-      <el-table-column align="center" label="可用座位数" prop="availableSeats" show-overflow-tooltip/>
+      <el-table-column align="center" label="可用座位数" width="120" prop="availableSeats" show-overflow-tooltip/>
       <el-table-column label="开放状态" align="center" prop="isOpen" width="100">
         <template #default="{ row }">
           <el-tag
@@ -265,6 +265,7 @@ export default {
     getList() {
       this.loading = true;
       listReadingroom(this.queryParams).then(response => {
+
         this.readingroomList = response.rows;
         this.total = response.total;
         this.loading = false;

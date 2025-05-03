@@ -77,10 +77,19 @@
     <el-table v-loading="loading" :data="seatList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="45" align="center" />
       <el-table-column label="座位ID" align="center" prop="id" show-overflow-tooltip/>
-      <el-table-column label="阅览室ID" align="center" prop="readingRoomId" show-overflow-tooltip/>
+      <el-table-column label="阅览室" align="center" prop="roomName" show-overflow-tooltip/>
       <el-table-column label="座位排号" align="center" prop="rowNum" show-overflow-tooltip/>
       <el-table-column label="座位列号" align="center" prop="colNum" show-overflow-tooltip/>
-      <el-table-column label="是否可用" align="center" prop="isAvailable" show-overflow-tooltip/>
+      <el-table-column label="是否可用" align="center" prop="isAvailable">
+        <template #default="{ row }">
+          <el-tag
+            :type="row.isAvailable === 1 ? 'success' : 'info'"
+            disable-transitions
+          >
+            {{ row.isAvailable === 1 ? '可用' : '不可用' }}
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="是否已预约" align="center" prop="isReserved" show-overflow-tooltip/>
       <el-table-column label="座位描述" align="center" prop="description" show-overflow-tooltip/>
       <el-table-column label="逻辑删除标志" align="center" prop="isDeleted" show-overflow-tooltip/>
@@ -206,6 +215,7 @@ export default {
     getList() {
       this.loading = true;
       listSeat(this.queryParams).then(response => {
+        console.log("listSeat: ",response)
         this.seatList = response.rows;
         this.total = response.total;
         this.loading = false;

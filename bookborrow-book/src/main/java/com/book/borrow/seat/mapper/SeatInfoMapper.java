@@ -2,6 +2,7 @@ package com.book.borrow.seat.mapper;
 
 import java.util.List;
 import com.book.borrow.seat.domain.SeatInfo;
+import com.book.borrow.seat.domain.vo.SeatInfoVo;
 
 /**
  * 座位信息Mapper接口

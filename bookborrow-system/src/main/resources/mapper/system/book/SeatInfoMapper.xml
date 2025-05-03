@@ -17,23 +17,63 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="isDeleted"    column="is_deleted"    />
     </resultMap>
 
+    <resultMap type="SeatInfoVo" id="SeatInfoInnerResult">
+        <result property="id"            column="id" />
+        <result property="readingRoomId" column="reading_room_id" />
+        <result property="roomName"      column="room_name" />
+        <result property="rowNum"        column="row_num" />
+        <result property="colNum"        column="col_num" />
+        <result property="isAvailable"   column="is_available" />
+        <result property="isReserved"    column="is_reserved" />
+        <result property="description"   column="description" />
+        <result property="createTime"    column="create_time" />
+        <result property="updateTime"    column="update_time" />
+        <result property="isDeleted"     column="is_deleted" />
+    </resultMap>
+
     <sql id="selectSeatInfoVo">
         select id, reading_room_id, row_num, col_num, is_available, is_reserved, description, create_time, update_time, is_deleted from seat_info
     </sql>
 
-    <select id="selectSeatInfoList" parameterType="SeatInfo" resultMap="SeatInfoResult">
-        <include refid="selectSeatInfoVo"/>
-        <where>  
-            <if test="readingRoomId != null "> and reading_room_id = #{readingRoomId}</if>
-            <if test="rowNum != null "> and row_num = #{rowNum}</if>
-            <if test="colNum != null "> and col_num = #{colNum}</if>
-            <if test="isAvailable != null "> and is_available = #{isAvailable}</if>
-            <if test="isReserved != null "> and is_reserved = #{isReserved}</if>
-            <if test="description != null  and description != ''"> and description = #{description}</if>
-            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
-        </where>
+<!--    <select id="selectSeatInfoList" parameterType="SeatInfo" resultMap="SeatInfoResult">-->
+<!--        <include refid="selectSeatInfoVo"/>-->
+<!--        <where>  -->
+<!--            <if test="readingRoomId != null "> and reading_room_id = #{readingRoomId}</if>-->
+<!--            <if test="rowNum != null "> and row_num = #{rowNum}</if>-->
+<!--            <if test="colNum != null "> and col_num = #{colNum}</if>-->
+<!--            <if test="isAvailable != null "> and is_available = #{isAvailable}</if>-->
+<!--            <if test="isReserved != null "> and is_reserved = #{isReserved}</if>-->
+<!--            <if test="description != null  and description != ''"> and description = #{description}</if>-->
+<!--            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>-->
+<!--        </where>-->
+<!--    </select>-->
+
+    <select id="selectSeatInfoList" parameterType="SeatInfo" resultMap="SeatInfoInnerResult">
+        SELECT
+        si.id,
+        si.reading_room_id,
+        rr.room_name,
+        si.row_num,
+        si.col_num,
+        si.is_available,
+        si.is_reserved,
+        si.description,
+        si.create_time,
+        si.update_time,
+        si.is_deleted
+        FROM seat_info si
+        LEFT JOIN reading_room rr ON si.reading_room_id = rr.id
+        <trim prefix="WHERE" prefixOverrides="AND |OR ">
+            <if test="readingRoomId != null"> reading_room_id = #{readingRoomId} </if>
+            <if test="rowNum != null"> AND row_num = #{rowNum} </if>
+            <if test="colNum != null"> AND col_num = #{colNum} </if>
+            <if test="isAvailable != null"> AND is_available = #{isAvailable} </if>
+            <if test="isReserved != null"> AND is_reserved = #{isReserved} </if>
+            <if test="description != null and description != ''"> AND description = #{description} </if>
+            <if test="isDeleted != null"> AND is_deleted = #{isDeleted} </if>
+        </trim>
     </select>
-    
+
     <select id="selectSeatInfoById" parameterType="Long" resultMap="SeatInfoResult">
         <include refid="selectSeatInfoVo"/>
         where id = #{id}

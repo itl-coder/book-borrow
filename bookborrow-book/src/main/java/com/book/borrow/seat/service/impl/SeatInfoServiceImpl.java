@@ -2,6 +2,7 @@ package com.book.borrow.seat.service.impl;
 
 import java.util.List;
 import com.book.borrow.common.utils.DateUtils;
+import com.book.borrow.seat.domain.vo.SeatInfoVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.book.borrow.seat.mapper.SeatInfoMapper;
