@@ -56,6 +56,12 @@ importers:
       sortablejs:
         specifier: 1.10.2
         version: 1.10.2
+      three:
+        specifier: ^0.176.0
+        version: 0.176.0
+      three-orbitcontrols:
+        specifier: ^2.110.3
+        version: 2.110.3(three@0.176.0)
       vue:
         specifier: 2.6.12
         version: 2.6.12
@@ -5064,6 +5070,18 @@ packages:
     engines: {node: '>= 6.9.0 <7.0.0 || >= 8.9.0'}
     peerDependencies:
       webpack: ^2.0.0 || ^3.0.0 || ^4.0.0
+
+  three-orbitcontrols@2.110.3:
+    resolution: {integrity: sha512-BNNbksJwbN3/MmT0X/gjz5ZCchm7bjk26SUdtJYRxfEYjDfkb/0PeUTHE/KuyJ5vb/owK3mojyy3vcqDx99sRA==}
+    deprecated: |
+      three-js exposes real modules now via three/examples/jsm/...
+      for example to import Orbit, do
+      import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+    peerDependencies:
+      three: '>= 0.110.0'
+
+  three@0.176.0:
+    resolution: {integrity: sha512-PWRKYWQo23ojf9oZSlRGH8K09q7nRSWx6LY/HF/UUrMdYgN9i1e2OwJYHoQjwc6HF/4lvvYLC5YC1X8UJL2ZpA==}
 
   throttle-debounce@1.1.0:
     resolution: {integrity: sha512-XH8UiPCQcWNuk2LYePibW/4qL97+ZQ1AN3FNXwZRBNPPowo/NRU5fAlDCSNBJIYCKbioZfuYtMhG4quqoJhVzg==}
@@ -11561,6 +11579,12 @@ snapshots:
       loader-utils: 1.4.2
       neo-async: 2.6.2
       webpack: 4.47.0
+
+  three-orbitcontrols@2.110.3(three@0.176.0):
+    dependencies:
+      three: 0.176.0
+
+  three@0.176.0: {}
 
   throttle-debounce@1.1.0: {}
 

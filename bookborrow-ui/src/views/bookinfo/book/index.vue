@@ -1,7 +1,5 @@
 <template>
   <div class="app-container">
-    <NavHeader/>
-
     <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="118px" size="small">
       <el-form-item label="图书标题" prop="title">
         <el-input
@@ -319,14 +317,10 @@
 <script>
 import {addBook, delBook, getBook, listBook, statusBook, updateBook} from "@/api/bookinfo/book";
 import {countFrontListCategory} from "@/api/bookinfo/category";
-import NavHeader from "@/views/components/nav/NavHeader.vue";
-import YFooter from "@/views/components/footer/YFooter.vue";
+
 export default {
   name: "Book",
-  components:{
-    NavHeader,
-    YFooter
-  },
+  components: {},
   data() {
     return {
       countBook: 0, // 馆藏图书总数
