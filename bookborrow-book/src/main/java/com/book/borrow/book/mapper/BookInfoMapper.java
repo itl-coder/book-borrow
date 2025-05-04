@@ -2,6 +2,7 @@ package com.book.borrow.book.mapper;
 
 import com.book.borrow.book.domain.BookInfo;
 import com.book.borrow.book.domain.vo.BookInfoCategoryVO;
+import com.book.borrow.book.domain.vo.BookInfoSortVO;
 import com.book.borrow.book.domain.vo.BookInfoStatusVO;
 
 import java.util.List;
@@ -65,5 +66,5 @@ public interface BookInfoMapper {
 
     public List<BookInfoCategoryVO> selectBookInfoCategory();
 
-    public List<BookInfo> selectBookInfoFrontList(BookInfo bookInfo);
+    public List<BookInfo> selectBookInfoFrontList(BookInfoSortVO bookInfoSortVO);
 }

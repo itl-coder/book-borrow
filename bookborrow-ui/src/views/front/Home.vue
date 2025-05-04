@@ -15,6 +15,7 @@
                    :pageNum="query.pageNum"
                    :pageSize="query.pageSize"
                    :total="query.total"
+                   @sort-change="sortBookInfo"
                    @update:currentPage="handleCurrentPageChange"
                    @update:pageSize="handlePageSizeChange"/>
       </div>
@@ -43,6 +44,8 @@ export default {
   data() {
     return {
       query: {
+        sortField: '',
+        sortOrder: '',
         categoryId: '', // 分类id
         title: '', // 图书名称
         pageNum: 1,   // 当前页
@@ -70,6 +73,13 @@ export default {
     }
   },
   methods: {
+    sortBookInfo(sortParam) {
+      console.log("sortField: ", sortParam.sortField)
+      console.log("sortOrder: ", sortParam.sortOrder)
+      this.query.sortField = sortParam.sortField
+      this.query.sortOrder = sortParam.sortOrder
+      this.getBookList()
+    },
     searchBook(bookName) {
       this.query.title = bookName
       this.getBookList()

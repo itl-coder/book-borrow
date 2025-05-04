@@ -4,18 +4,19 @@
     <div class="list-header">
       <h3>热门图书</h3>
       <div class="sort-options">
-        <div :class="{'active': sortType === 'default'}" class="sort-option" @click="selectSort('default')">
-          <i class="el-icon-sort" style="margin-right: 8px;"></i> 默认排序
-        </div>
-        <div :class="{'active': sortType === 'publish-date'}" class="sort-option" @click="selectSort('publish-date')">
-          <i class="el-icon-calendar" style="margin-right: 8px;"></i> 按出版时间排序
-        </div>
-        <div :class="{'active': sortType === 'borrowed-count'}" class="sort-option"
-             @click="selectSort('borrowed-count')">
-          <i class="el-icon-download" style="margin-right: 8px;"></i> 按借阅次数排序
-        </div>
-        <div :class="{'active': sortType === 'recommended'}" class="sort-option" @click="selectSort('recommended')">
-          <i class="el-icon-star-on" style="margin-right: 8px;"></i> 按推荐排序
+        <div
+          v-for="(label, key) in sortOptions"
+          :key="key"
+          :class="['sort-option', { active: sortType === key }]"
+          @click="toggleSort(key)"
+        >
+          <i :class="sortIcons[key]" style="margin-right: 8px;"></i>
+          {{ label }}
+          <i
+            v-if="sortType === key"
+            :class="sortOrder === 'asc' ? 'el-icon-caret-top' : 'el-icon-caret-bottom'"
+            style="margin-left: 4px;"
+          />
         </div>
       </div>
     </div>
@@ -34,15 +35,15 @@
       <el-pagination
         :current-page="pageNum"
         :page-size="pageSize"
-        :page-sizes="[3,10, 20, 30, 40]"
+        :page-sizes="[3, 10, 20, 30, 40]"
         :total="total"
         layout="total, sizes, prev, pager, next, jumper"
         @size-change="handleSizeChange"
-        @current-change="handleCurrentChange">
-      </el-pagination>
+        @current-change="handleCurrentChange"
+      />
     </div>
 
-    <!-- 返回顶部按钮 -->
+    <!-- 返回顶部 -->
     <el-backtop :bottom="50" :right="50" :visibility-height="200"/>
   </div>
 </template>
@@ -62,7 +63,7 @@ export default {
     },
     pageNum: {
       type: Number,
-      required: true,
+      required: true
     },
     pageSize: {
       type: Number,
@@ -75,27 +76,42 @@ export default {
   },
   data() {
     return {
-      sortType: 'default', // 默认排序
-      sortOptions: { // 排序选项
-        default: '默认排序',
-        'publish-date': '按出版时间排序',
-        'borrowed-count': '按借阅次数排序',
-        'recommended': '按推荐排序'
+      sortType: 'title', // 当前排序字段
+      sortOrder: 'asc',   // 排序顺序
+      sortOptions: {
+        title: '默认排序',
+        publish_date: '按出版时间排序',
+        is_recommended: '按推荐排序'
+      },
+      sortIcons: {
+        title: 'el-icon-sort',
+        publish_date: 'el-icon-calendar',
+        is_recommended: 'el-icon-star-on'
       }
     }
   },
   methods: {
+    toggleSort(type) {
+      if (this.sortType === type) {
+        // 点击相同字段，切换排序顺序
+        this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc'
+      } else {
+        // 切换排序字段时，默认降序
+        this.sortType = type
+        this.sortOrder = 'desc'
+      }
+      // 通知父组件排序变更
+      this.$emit('sort-change', {
+        sortField: this.sortType,
+        sortOrder: this.sortOrder
+      })
+    },
     handleSizeChange(size) {
-      // 子组件发送 pageSize 的变化到父组件
-      this.$emit('update:pageSize', size);
+      this.$emit('update:pageSize', size)
     },
     handleCurrentChange(page) {
-      // 子组件发送 currentPage 的变化到父组件
-      this.$emit('update:currentPage', page);
-    },
-    selectSort(value) {
-      this.sortType = value
-    },
+      this.$emit('update:currentPage', page)
+    }
   }
 }
 </script>
@@ -105,7 +121,7 @@ export default {
   margin: 0 auto;
   padding: 20px;
   background: #fff;
-  max-width: 1200px; /* 限制最大宽度 */
+  max-width: 1200px;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
@@ -150,7 +166,7 @@ export default {
 }
 
 .sort-option i {
-  margin-right: 8px;
+  margin-right: 4px;
 }
 
 .book-items {
@@ -162,7 +178,6 @@ export default {
   margin-top: 30px;
 }
 
-/* 针对图书项间距调整 */
 .el-row {
   margin-bottom: 20px;
 }
@@ -211,9 +226,8 @@ export default {
   color: #777;
 }
 
-/* 返回顶部按钮 */
 .el-backtop {
-  z-index: 9999; /* 保证它在最上层 */
+  z-index: 9999;
 }
 
 @media (min-width: 1200px) {

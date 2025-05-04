@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.crypto.Data;
 
 import com.book.borrow.book.domain.vo.BookInfoCategoryVO;
+import com.book.borrow.book.domain.vo.BookInfoSortVO;
 import com.book.borrow.book.domain.vo.BookInfoStatusVO;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,7 @@ public class BookInfoController extends BaseController
     }
 
     @GetMapping("/front/list")
-    public TableDataInfo frontList(BookInfo bookInfo)
+    public TableDataInfo frontList(BookInfoSortVO bookInfo)
     {
         startPage();
         List<BookInfo> list = bookInfoService.selectBookInfoFrontList(bookInfo);

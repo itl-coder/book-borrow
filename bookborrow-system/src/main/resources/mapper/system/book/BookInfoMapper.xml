@@ -1,64 +1,83 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.book.borrow.book.mapper.BookInfoMapper">
-    
+
     <resultMap type="BookInfo" id="BookInfoResult">
-        <result property="id"    column="id"    />
-        <result property="title"    column="title"    />
-        <result property="author"    column="author"    />
-        <result property="publisher"    column="publisher"    />
-        <result property="publishDate"    column="publish_date"    />
-        <result property="categoryId"    column="category_id"    />
-        <result property="categoryName"    column="category_name"    />
-        <result property="price"    column="price"    />
-        <result property="stock"    column="stock"    />
-        <result property="borrowStatus"    column="borrow_status"    />
-        <result property="description"    column="description"    />
-        <result property="isPublished"    column="is_published"    />
-        <result property="isRecommended"    column="is_recommended"    />
-        <result property="coverUrl"    column="cover_url"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="isDeleted"    column="is_deleted"    />
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="author" column="author"/>
+        <result property="publisher" column="publisher"/>
+        <result property="publishDate" column="publish_date"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="categoryName" column="category_name"/>
+        <result property="price" column="price"/>
+        <result property="stock" column="stock"/>
+        <result property="borrowStatus" column="borrow_status"/>
+        <result property="description" column="description"/>
+        <result property="isPublished" column="is_published"/>
+        <result property="isRecommended" column="is_recommended"/>
+        <result property="coverUrl" column="cover_url"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="isDeleted" column="is_deleted"/>
     </resultMap>
 
     <resultMap type="BookInfoStatusVO" id="BookInfoStatusVOMap">
-        <result property="bookCount"    column="book_count"    />
-        <result property="borrowCount"    column="borrow_count"    />
+        <result property="bookCount" column="book_count"/>
+        <result property="borrowCount" column="borrow_count"/>
     </resultMap>
     <resultMap type="BookInfoCategoryVO" id="BookInfoCategoryVO">
-        <result property="categoryId"    column="category_id"    />
-        <result property="bookCount"    column="book_count"    />
-        <result property="categoryName"    column="category_name"    />
+        <result property="categoryId" column="category_id"/>
+        <result property="bookCount" column="book_count"/>
+        <result property="categoryName" column="category_name"/>
     </resultMap>
 
     <sql id="selectBookInfoVo">
-        select id, title, author, publisher, publish_date, category_id, category_name, price, stock, borrow_status, description, is_published, is_recommended, cover_url, create_time, update_time, is_deleted from book_info
+        select id,
+               title,
+               author,
+               publisher,
+               publish_date,
+               category_id,
+               category_name,
+               price,
+               stock,
+               borrow_status,
+               description,
+               is_published,
+               is_recommended,
+               cover_url,
+               create_time,
+               update_time,
+               is_deleted
+        from book_info
     </sql>
 
     <select id="selectBookInfoList" parameterType="BookInfo" resultMap="BookInfoResult">
         <include refid="selectBookInfoVo"/>
-        <where>  
-            <if test="title != null  and title != ''"> and title = #{title}</if>
-            <if test="author != null  and author != ''"> and author = #{author}</if>
-            <if test="publisher != null  and publisher != ''"> and publisher = #{publisher}</if>
-            <if test="publishDate != null "> and publish_date = #{publishDate}</if>
-            <if test="categoryId != null "> and category_id = #{categoryId}</if>
-            <if test="categoryName != null  and categoryName != ''"> and category_name like concat('%', #{categoryName}, '%')</if>
-            <if test="price != null "> and price = #{price}</if>
-            <if test="stock != null "> and stock = #{stock}</if>
-            <if test="borrowStatus != null "> and borrow_status = #{borrowStatus}</if>
-            <if test="description != null  and description != ''"> and description = #{description}</if>
-            <if test="isPublished != null "> and is_published = #{isPublished}</if>
-            <if test="isRecommended != null "> and is_recommended = #{isRecommended}</if>
-            <if test="coverUrl != null  and coverUrl != ''"> and cover_url = #{coverUrl}</if>
-            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
+        <where>
+            <if test="title != null  and title != ''">and title = #{title}</if>
+            <if test="author != null  and author != ''">and author = #{author}</if>
+            <if test="publisher != null  and publisher != ''">and publisher = #{publisher}</if>
+            <if test="publishDate != null ">and publish_date = #{publishDate}</if>
+            <if test="categoryId != null ">and category_id = #{categoryId}</if>
+            <if test="categoryName != null  and categoryName != ''">and category_name like concat('%', #{categoryName},
+                '%')
+            </if>
+            <if test="price != null ">and price = #{price}</if>
+            <if test="stock != null ">and stock = #{stock}</if>
+            <if test="borrowStatus != null ">and borrow_status = #{borrowStatus}</if>
+            <if test="description != null  and description != ''">and description = #{description}</if>
+            <if test="isPublished != null ">and is_published = #{isPublished}</if>
+            <if test="isRecommended != null ">and is_recommended = #{isRecommended}</if>
+            <if test="coverUrl != null  and coverUrl != ''">and cover_url = #{coverUrl}</if>
+            <if test="isDeleted != null ">and is_deleted = #{isDeleted}</if>
         </where>
         order by is_recommended desc
     </select>
-    
+
     <select id="selectBookInfoById" parameterType="Long" resultMap="BookInfoResult">
         <include refid="selectBookInfoVo"/>
         where id = #{id}
@@ -73,7 +92,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         FROM book_info
         GROUP BY category_id, category_name
     </select>
-    <select id="selectBookInfoFrontList" parameterType="bookInfo" resultMap="BookInfoResult">
+    <select id="selectBookInfoFrontList" parameterType="BookInfoSortVO" resultMap="BookInfoResult">
         <include refid="selectBookInfoVo"/>
         <where>
             <if test="title != null  and title != ''">and title like concat('%',#{title},'%')</if>
@@ -93,7 +112,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="coverUrl != null  and coverUrl != ''">and cover_url = #{coverUrl}</if>
             <if test="isDeleted != null ">and is_deleted = #{isDeleted}</if>
         </where>
-        order by is_recommended desc
+
+        <!-- 动态排序 -->
+        <if test="sortField != null and sortField != ''">
+            ORDER BY
+            <choose>
+                <when test="sortField == 'publishDate'">publish_date</when>
+                <when test="sortField == 'recommended'">is_recommended</when>
+                <otherwise>id</otherwise> <!-- 默认按id -->
+            </choose>
+            <if test="sortOrder != null and sortOrder == 'asc'">
+                ASC
+            </if>
+            <if test="sortOrder != null and sortOrder == 'desc'">
+                DESC
+            </if>
+        </if>
+        <if test="sortField == null or sortField == ''">
+            ORDER BY is_recommended DESC
+        </if>
     </select>
 
     <insert id="insertBookInfo" parameterType="BookInfo" useGeneratedKeys="true" keyProperty="id">
@@ -115,7 +152,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="isDeleted != null">is_deleted,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="title != null and title != ''">#{title},</if>
             <if test="author != null">#{author},</if>
@@ -133,7 +170,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="isDeleted != null">#{isDeleted},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateBookInfo" parameterType="BookInfo">
@@ -160,11 +197,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteBookInfoById" parameterType="Long">
-        delete from book_info where id = #{id}
+        delete
+        from book_info
+        where id = #{id}
     </delete>
 
     <delete id="deleteBookInfoByIds" parameterType="String">
-        delete from book_info where id in 
+        delete from book_info where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
