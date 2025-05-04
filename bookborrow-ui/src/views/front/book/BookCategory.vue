@@ -7,31 +7,29 @@
       </h3>
     </div>
 
-    <el-scrollbar class="category-scrollbar">
-      <el-menu
-        :default-active="activeCategory"
-        class="category-menu"
-        @select="handleSelect"
+    <el-menu
+      :default-active="activeCategory"
+      class="category-menu"
+      @select="handleSelect"
+    >
+      <el-menu-item
+        v-for="category in categories"
+        :key="category.categoryId"
+        :index="category.categoryId.toString()"
+        class="category-item"
       >
-        <el-menu-item
-          v-for="category in categories"
-          :key="category.categoryId"
-          :index="category.categoryId.toString()"
-          class="category-item"
-        >
-          <template #title>
-            <span class="category-name">{{ category.categoryName }}</span>
-            <el-tag
-              :type="activeCategory === category.categoryId.toString() ? 'primary' : 'info'"
-              class="category-count"
-              size="mini"
-            >
-              {{ category.bookCount }}
-            </el-tag>
-          </template>
-        </el-menu-item>
-      </el-menu>
-    </el-scrollbar>
+        <template #title>
+          <span class="category-name">{{ category.categoryName }}</span>
+          <el-tag
+            :type="activeCategory === category.categoryId.toString() ? 'primary' : 'info'"
+            class="category-count"
+            size="mini"
+          >
+            {{ category.bookCount }}
+          </el-tag>
+        </template>
+      </el-menu-item>
+    </el-menu>
   </div>
 </template>
 
@@ -54,11 +52,6 @@ export default {
       activeCategory: '0',
     }
   },
-  // computed: {
-  //   scrollHeight() {
-  //     return `calc(${this.height} - 60px)`
-  //   }
-  // },
   methods: {
     handleSelect(index) {
       this.activeCategory = index
@@ -109,12 +102,6 @@ export default {
   }
 }
 
-.category-scrollbar {
-  ::v-deep .el-scrollbar__wrap {
-    overflow-x: hidden;
-  }
-}
-
 .category-menu {
   border-right: none;
 
@@ -159,7 +146,7 @@ export default {
 .category-count {
   float: right;
   margin-top: 12px;
-  margin-right: 10px;
+  margin-right: 15px;
   height: 20px;
   line-height: 20px;
   border-radius: 10px;
