@@ -4,9 +4,9 @@
       <div class="logo">馆藏图书</div>
       <el-menu
         :default-active="activeIndex"
+        class="menu"
         mode="horizontal"
         @select="handleSelect"
-        class="menu"
       >
         <el-menu-item index="1">首页</el-menu-item>
         <el-menu-item index="2">文学小说</el-menu-item>
@@ -15,18 +15,18 @@
         <el-menu-item index="5">计算机</el-menu-item>
         <el-menu-item index="6">特价专区</el-menu-item>
       </el-menu>
-      <div class="search-box">
+      <div class="search-box" v-if="showFlag">
         <el-input
-          placeholder="请输入图书名"
           v-model="searchText"
+          placeholder="请输入图书名"
           @keyup.enter.native="handleSearch"
         >
           <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
         </el-input>
       </div>
       <div class="user-actions">
-        <el-button type="text" icon="el-icon-user"></el-button>
-        <el-button type="text" icon="el-icon-shopping-cart"></el-button>
+        <el-button icon="el-icon-user" type="text"></el-button>
+        <el-button icon="el-icon-shopping-cart" type="text"></el-button>
       </div>
     </div>
   </div>
@@ -35,6 +35,12 @@
 <script>
 export default {
   name: 'BookHeader',
+  props: {
+    showFlag: {
+      type: Boolean,
+      require: true
+    }
+  },
   data() {
     return {
       activeIndex: '1',
@@ -47,13 +53,13 @@ export default {
     },
     handleSearch() {
       console.log('search:', this.searchText)
-      this.$emit('search-book',this.searchText)
+      this.$emit('search-book', this.searchText)
     }
   }
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .book-header {
   background-color: #ffffff;
   position: sticky;

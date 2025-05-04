@@ -1,7 +1,7 @@
 <template>
   <div class="book-home">
     <!-- 顶部导航 -->
-    <book-header @search-book="searchBook"/>
+    <book-header :showFlag="showFlag" @search-book="searchBook"/>
     <div class="main-container">
       <!-- 轮播图 -->
       <book-slider :slides="slides"/>
@@ -43,6 +43,7 @@ export default {
   },
   data() {
     return {
+      showFlag: true, // 是否显示搜索
       query: {
         sortField: '',
         sortOrder: '',
@@ -74,8 +75,6 @@ export default {
   },
   methods: {
     sortBookInfo(sortParam) {
-      console.log("sortField: ", sortParam.sortField)
-      console.log("sortOrder: ", sortParam.sortOrder)
       this.query.sortField = sortParam.sortField
       this.query.sortOrder = sortParam.sortOrder
       this.getBookList()
