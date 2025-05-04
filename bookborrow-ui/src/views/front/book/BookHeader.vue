@@ -17,7 +17,7 @@
       </el-menu>
       <div class="search-box">
         <el-input
-          placeholder="搜索图书..."
+          placeholder="请输入图书名"
           v-model="searchText"
           @keyup.enter.native="handleSearch"
         >
@@ -47,6 +47,7 @@ export default {
     },
     handleSearch() {
       console.log('search:', this.searchText)
+      this.$emit('search-book',this.searchText)
     }
   }
 }

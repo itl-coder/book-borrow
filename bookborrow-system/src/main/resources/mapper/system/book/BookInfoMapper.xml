@@ -76,7 +76,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectBookInfoFrontList" parameterType="bookInfo" resultMap="BookInfoResult">
         <include refid="selectBookInfoVo"/>
         <where>
-            <if test="title != null  and title != ''">and title = #{title}</if>
+            <if test="title != null  and title != ''">and title like concat('%',#{title},'%')</if>
             <if test="author != null  and author != ''">and author = #{author}</if>
             <if test="publisher != null  and publisher != ''">and publisher = #{publisher}</if>
             <if test="publishDate != null ">and publish_date = #{publishDate}</if>

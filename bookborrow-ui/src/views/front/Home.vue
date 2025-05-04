@@ -1,7 +1,7 @@
 <template>
   <div class="book-home">
     <!-- 顶部导航 -->
-    <book-header/>
+    <book-header @search-book="searchBook"/>
     <div class="main-container">
       <!-- 轮播图 -->
       <book-slider :slides="slides"/>
@@ -12,7 +12,7 @@
         <book-category :categories="categories" @category-change="categoryChangeHandle"/>
         <!-- 图书列表 -->
         <book-list :books="books"
-                   :currentPage="query.pageNum"
+                   :pageNum="query.pageNum"
                    :pageSize="query.pageSize"
                    :total="query.total"
                    @update:currentPage="handleCurrentPageChange"
@@ -29,7 +29,7 @@ import BookSlider from '@/views/front/book/BookSlider'
 import BookList from '@/views/front/book/BookList'
 import BookCategory from '@/views/front/book/BookCategory'
 import YFooter from "@/views/components/footer/YFooter.vue"
-import {categoryBookList, listBook, listFrontBook} from "@/api/bookinfo/book"
+import {categoryBookList, listFrontBook} from "@/api/bookinfo/book"
 
 export default {
   name: 'Home',
@@ -43,6 +43,8 @@ export default {
   data() {
     return {
       query: {
+        categoryId: '', // 分类id
+        title: '', // 图书名称
         pageNum: 1,   // 当前页
         pageSize: 3,     // 每页大小
         total: 0,  // 总条目数
@@ -68,6 +70,10 @@ export default {
     }
   },
   methods: {
+    searchBook(bookName) {
+      this.query.title = bookName
+      this.getBookList()
+    },
     handleCurrentPageChange(page) {
       this.query.pageNum = page;
       this.getBookList()
@@ -89,6 +95,8 @@ export default {
     },
     categoryChangeHandle(categoryId) {
       console.log("categoryChangeHandle: ", categoryId)
+      this.query.categoryId = categoryId
+      this.getBookList()
     },
     getBookCategory() {
       categoryBookList().then(response => {
