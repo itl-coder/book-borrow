@@ -2,6 +2,9 @@ package com.book.borrow.web.controller.bookborrow;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.crypto.Data;
+
+import com.book.borrow.book.domain.vo.BookInfoStatusVO;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,6 +48,14 @@ public class BookInfoController extends BaseController
         List<BookInfo> list = bookInfoService.selectBookInfoList(bookInfo);
         return getDataTable(list);
     }
+    @PreAuthorize("@ss.hasPermi('bookinfo:book:list')")
+    @GetMapping("/status")
+    public AjaxResult statusList()
+    {
+        BookInfoStatusVO bookInfoStatusVO = bookInfoService.selectBookInfoStatus();
+        return success(bookInfoStatusVO);
+    }
+
 
     /**
      * 导出图书信息（无外键约束）列表

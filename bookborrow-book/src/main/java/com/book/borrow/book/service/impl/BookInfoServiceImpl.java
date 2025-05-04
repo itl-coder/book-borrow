@@ -1,6 +1,8 @@
 package com.book.borrow.book.service.impl;
 
 import java.util.List;
+
+import com.book.borrow.book.domain.vo.BookInfoStatusVO;
 import com.book.borrow.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -92,5 +94,10 @@ public class BookInfoServiceImpl implements IBookInfoService
     public int deleteBookInfoById(Long id)
     {
         return bookInfoMapper.deleteBookInfoById(id);
+    }
+
+    @Override
+    public BookInfoStatusVO selectBookInfoStatus() {
+        return bookInfoMapper.selectBookInfoStatus();
     }
 }

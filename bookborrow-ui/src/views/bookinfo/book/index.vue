@@ -1,5 +1,7 @@
 <template>
   <div class="app-container">
+    <NavHeader/>
+
     <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="118px" size="small">
       <el-form-item label="图书标题" prop="title">
         <el-input
@@ -56,8 +58,8 @@
           placeholder="请选择是否上架"
           @change="handleQuery"
         >
-          <el-option :label="'上架'" :value="1" />
-          <el-option :label="'下架'" :value="0" />
+          <el-option :label="'上架'" :value="1"/>
+          <el-option :label="'下架'" :value="0"/>
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -116,40 +118,50 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
+    <div class="count-book-info">
+      <el-card>
+         <span>
+            馆藏图书: <strong> {{ countBook }} </strong>本
+         </span>
+        <span>
+            借出图书: <strong> {{ countBorrowBook }} </strong> 本
+          </span>
+      </el-card>
+    </div>
     <el-table
       v-loading="loading"
       :data="bookList"
-      @selection-change="handleSelectionChange"
-      stripe
       border
       highlight-current-row
+      stripe
       style="width: 100%"
+      @selection-change="handleSelectionChange"
     >
       <!-- 多选框 -->
-      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column align="center" type="selection" width="55"/>
 
-      <el-table-column prop="id" label="图书ID" width="80" align="center"/>
-      <el-table-column prop="title" label="标题" width="160" align="center" show-overflow-tooltip/>
-      <el-table-column prop="author" label="作者" width="120" align="center" show-overflow-tooltip/>
-      <el-table-column prop="publisher" label="出版社" width="120" align="center" show-overflow-tooltip/>
+      <el-table-column align="center" label="图书ID" prop="id" width="80"/>
+      <el-table-column align="center" label="标题" prop="title" show-overflow-tooltip width="160"/>
+      <el-table-column align="center" label="作者" prop="author" show-overflow-tooltip width="120"/>
+      <el-table-column align="center" label="出版社" prop="publisher" show-overflow-tooltip width="120"/>
 
-      <el-table-column label="出版日期" width="120" align="center" show-overflow-tooltip>
+      <el-table-column align="center" label="出版日期" show-overflow-tooltip width="120">
         <template #default="{ row }">
           <span>{{ parseTime(row.publishDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column prop="categoryName" label="分类" width="100" align="center" show-overflow-tooltip/>
-      <el-table-column prop="price" label="价格" width="80" align="center">
+      <el-table-column align="center" label="分类" prop="categoryName" show-overflow-tooltip width="100"/>
+      <el-table-column align="center" label="价格" prop="price" width="80">
         <template #default="{ row }">
           {{ row.price }}$
         </template>
       </el-table-column>
 
-      <el-table-column prop="stock" label="库存" width="80" align="center"/>
+      <el-table-column align="center" label="库存" prop="stock" width="80"/>
 
       <!-- 借阅状态标签 -->
-      <el-table-column label="借阅状态" width="100" align="center">
+      <el-table-column align="center" label="借阅状态" width="100">
         <template #default="{ row }">
           <el-tag :type="row.borrowStatus === 0 ? 'success' : 'warning'" disable-transitions>
             {{ row.borrowStatus === 0 ? '可借' : '已借出' }}
@@ -158,9 +170,9 @@
       </el-table-column>
 
       <!-- 图书简介 Tooltip -->
-      <el-table-column label="简介" align="center" width="150">
+      <el-table-column align="center" label="简介" width="150">
         <template #default="{ row }">
-          <el-tooltip effect="dark" :content="row.description" placement="top">
+          <el-tooltip :content="row.description" effect="dark" placement="top">
             <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
               {{ row.description }}
             </div>
@@ -169,43 +181,42 @@
       </el-table-column>
 
       <!-- 是否上架 Switch -->
-      <el-table-column label="上架状态" width="150" align="center">
+      <el-table-column align="center" label="上架状态" width="150">
         <template #default="{ row }">
           <el-switch
-            disabled
             v-model="row.isPublished"
             :active-value="1"
             :inactive-value="0"
             active-text="上架"
+            disabled
             inactive-text="下架"
             @change="val => handlePublishChange(row, val)"
           />
         </template>
       </el-table-column>
-
       <!-- 是否推荐 Switch -->
-      <el-table-column label="推荐状态" width="150" align="center">
+      <el-table-column align="center" label="推荐状态" width="150">
         <template #default="{ row }">
           <el-switch
-            disabled
             v-model="row.isRecommended"
             :active-value="1"
             :inactive-value="0"
             active-text="推荐"
+            disabled
             inactive-text="普通"
             @change="val => handleRecommendChange(row, val)"
           />
         </template>
       </el-table-column>
       <!-- 图书封面图 -->
-      <el-table-column label="图书封面" align="center" prop="coverUrl" width="100">
+      <el-table-column align="center" label="图书封面" prop="coverUrl" width="100">
         <template slot-scope="scope">
-          <image-preview :src="scope.row.coverUrl" :width="50" :height="50"/>
+          <image-preview :height="50" :src="scope.row.coverUrl" :width="50"/>
         </template>
       </el-table-column>
 
       <!-- 操作按钮 -->
-      <el-table-column label="操作" fixed="right" width="130" align="center">
+      <el-table-column align="center" fixed="right" label="操作" width="130">
         <template #default="{ row }">
           <el-button
             v-hasPermi="['bookinfo:book:edit']"
@@ -234,6 +245,8 @@
       @pagination="getList"
     />
 
+    <Y-Footer/>
+
     <!-- 添加或修改图书信息（无外键约束）对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body width="700px">
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
@@ -258,7 +271,7 @@
           <el-input v-model="form.price" placeholder="请输入价格"/>
         </el-form-item>
         <el-form-item label="库存数量" prop="stock">
-          <el-input v-model="form.stock" type="number" placeholder="请输入库存数量"/>
+          <el-input v-model="form.stock" placeholder="请输入库存数量" type="number"/>
         </el-form-item>
         <el-form-item label="图书简介" prop="description">
           <el-input v-model="form.description" placeholder="请输入内容" type="textarea"/>
@@ -288,9 +301,9 @@
           <image-upload v-model="form.coverUrl"/>
         </el-form-item>
         <el-form-item label="逻辑删除" prop="isDeleted">
-          <el-select v-model="form.isDeleted" placeholder="请选择逻辑删除状态" clearable>
-            <el-option :label="'恢复数据'" :value="0" />
-            <el-option :label="'删除数据'" :value="1" />
+          <el-select v-model="form.isDeleted" clearable placeholder="请选择逻辑删除状态">
+            <el-option :label="'恢复数据'" :value="0"/>
+            <el-option :label="'删除数据'" :value="1"/>
           </el-select>
         </el-form-item>
 
@@ -304,13 +317,20 @@
 </template>
 
 <script>
-import {addBook, delBook, getBook, listBook, updateBook} from "@/api/bookinfo/book";
+import {addBook, delBook, getBook, listBook, statusBook, updateBook} from "@/api/bookinfo/book";
 import {countFrontListCategory} from "@/api/bookinfo/category";
-
+import NavHeader from "@/views/components/nav/NavHeader.vue";
+import YFooter from "@/views/components/footer/YFooter.vue";
 export default {
   name: "Book",
+  components:{
+    NavHeader,
+    YFooter
+  },
   data() {
     return {
+      countBook: 0, // 馆藏图书总数
+      countBorrowBook: 0, // 借出总数
       bookCategoryList: [],
       // 遮罩层
       loading: true,
@@ -364,9 +384,17 @@ export default {
   },
   created() {
     this.getList();
+    this.getBookStatus();
     this.getCountFrontCategoryList();
   },
   methods: {
+    getBookStatus() {
+      statusBook().then(response => {
+        console.log("status: ", response)
+        this.countBook = response.data.bookCount;
+        this.countBorrowBook = response.data.borrowCount;
+      })
+    },
     getCountFrontCategoryList() {
       countFrontListCategory().then(response => {
         this.bookCategoryList = response.data
@@ -481,3 +509,37 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.count-book-info .el-card {
+  margin: 10px 0;
+
+  span {
+    font-family: "Microsoft YaHei";
+    font-size: 13.333px;
+    white-space: pre;
+  }
+
+  span:nth-child(1) strong {
+    font-family: "Microsoft YaHei";
+    font-size: 16px;
+    color: rgb(24, 144, 255);
+    white-space: pre;
+    font-weight: bold;
+    display: inline-block;
+  }
+
+  span:nth-child(2) {
+    margin-left: 50px;
+
+    strong {
+      font-family: "Microsoft YaHei";
+      font-size: 16px;
+      color: rgb(208, 55, 54);
+      white-space: pre;
+      font-weight: bold;
+      display: inline-block;
+    }
+  }
+}
+</style>

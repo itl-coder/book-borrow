@@ -9,6 +9,13 @@ export function listBook(query) {
   })
 }
 
+export function statusBook() {
+  return request({
+    url: '/bookinfo/book/status',
+    method: 'get'
+  })
+}
+
 // 查询图书信息（无外键约束）详细
 export function getBook(id) {
   return request({

@@ -2,6 +2,7 @@ package com.book.borrow.book.service;
 
 import java.util.List;
 import com.book.borrow.book.domain.BookInfo;
+import com.book.borrow.book.domain.vo.BookInfoStatusVO;
 
 /**
  * 图书信息（无外键约束）Service接口
@@ -58,4 +59,6 @@ public interface IBookInfoService
      * @return 结果
      */
     public int deleteBookInfoById(Long id);
+
+   public BookInfoStatusVO selectBookInfoStatus();
 }
