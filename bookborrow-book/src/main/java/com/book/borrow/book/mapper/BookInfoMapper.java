@@ -1,6 +1,7 @@
 package com.book.borrow.book.mapper;
 
 import com.book.borrow.book.domain.BookInfo;
+import com.book.borrow.book.domain.vo.BookInfoCategoryVO;
 import com.book.borrow.book.domain.vo.BookInfoStatusVO;
 
 import java.util.List;
@@ -61,4 +62,6 @@ public interface BookInfoMapper {
     public int deleteBookInfoByIds(Long[] ids);
 
     public BookInfoStatusVO selectBookInfoStatus();
+
+    public List<BookInfoCategoryVO> selectBookInfoCategory();
 }

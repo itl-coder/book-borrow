@@ -2,6 +2,7 @@ package com.book.borrow.book.service.impl;
 
 import java.util.List;
 
+import com.book.borrow.book.domain.vo.BookInfoCategoryVO;
 import com.book.borrow.book.domain.vo.BookInfoStatusVO;
 import com.book.borrow.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,5 +100,10 @@ public class BookInfoServiceImpl implements IBookInfoService
     @Override
     public BookInfoStatusVO selectBookInfoStatus() {
         return bookInfoMapper.selectBookInfoStatus();
+    }
+
+    @Override
+    public List<BookInfoCategoryVO> selectBookInfoCategory() {
+        return bookInfoMapper.selectBookInfoCategory();
     }
 }

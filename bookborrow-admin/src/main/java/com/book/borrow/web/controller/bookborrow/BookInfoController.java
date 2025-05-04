@@ -4,6 +4,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.crypto.Data;
 
+import com.book.borrow.book.domain.vo.BookInfoCategoryVO;
 import com.book.borrow.book.domain.vo.BookInfoStatusVO;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,12 +49,21 @@ public class BookInfoController extends BaseController
         List<BookInfo> list = bookInfoService.selectBookInfoList(bookInfo);
         return getDataTable(list);
     }
+
     @PreAuthorize("@ss.hasPermi('bookinfo:book:list')")
     @GetMapping("/status")
     public AjaxResult statusList()
     {
         BookInfoStatusVO bookInfoStatusVO = bookInfoService.selectBookInfoStatus();
         return success(bookInfoStatusVO);
+    }
+
+
+    @GetMapping("/front/category")
+    public AjaxResult frontCategoryList()
+    {
+        List<BookInfoCategoryVO> bookInfoCategoryVOList = bookInfoService.selectBookInfoCategory();
+        return success(bookInfoCategoryVOList);
     }
 
 

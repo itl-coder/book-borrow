@@ -8,11 +8,11 @@
     <div class="book-info">
       <div class="info-content">
         <div class="title-section">
-          <h4 class="book-title">{{ book.title }}</h4>
+          <h4 class="book-title">书名: {{ book.title }}</h4>
           <div class="meta-line">
-            <span class="author">{{ book.author }}</span>
+            <span class="author">作者: {{ book.author }}</span>
             <span class="divider">·</span>
-            <span class="publisher">{{ book.publisher }}</span>
+            <span class="publisher">出版社: {{ book.publisher }}</span>
           </div>
         </div>
 
@@ -20,18 +20,22 @@
           <div class="detail-row">
             <div class="detail-item">
               <i class="el-icon-date"></i>
-              <span>{{ formatDate(book.publishDate) }}</span>
+              <span>出版日期: {{ formatDate(book.publishDate) }}</span>
             </div>
             <div class="detail-item">
               <i class="el-icon-collection-tag"></i>
-              <span>{{ book.categoryName }}</span>
+              <span>分类: {{ book.categoryName }}</span>
             </div>
           </div>
           <div v-if="typeof book.stock === 'number'" class="detail-row">
-            <div class="detail-item stock-item">
+            <div :class="['detail-item stock-item', { 'low-stock-item': book.stock <= 10 }]">
               <i class="el-icon-box"></i>
-              <span>库存 {{ book.stock }} 本</span>
-              <div :style="{ width: getStockPercentage(book.stock) }" class="stock-bar"></div>
+              <span :class="{ 'low-stock-text': book.stock <= 10 }">库存 {{ book.stock }} 本</span>
+              <!-- 根据库存数量设置颜色 -->
+              <div
+                :style="{ width: getStockPercentage(book.stock) }"
+                :class="['stock-bar', { 'low-stock': book.stock <= 10 }]"
+              ></div>
             </div>
           </div>
         </div>
@@ -50,17 +54,17 @@ export default {
     }
   },
   methods: {
+    getStockPercentage(stock) {
+      const maxStock = 100; // 你可以根据实际最大库存调整
+      const percent = Math.min((stock / maxStock) * 100, 100);
+      return percent + '%';
+    },
     goToDetail(id) {
       this.$router.push(`/book/${id}`);
     },
     formatDate(dateStr) {
       return dateStr ? dateStr.split(' ')[0] : '未知日期';
     },
-    getStockPercentage(stock) {
-      const maxStock = 100; // 假设最大库存为100
-      const percentage = Math.min((stock / maxStock) * 100, 100);
-      return `${percentage}%`;
-    }
   }
 };
 </script>
@@ -164,7 +168,7 @@ export default {
   .meta-line {
     display: flex;
     align-items: center;
-    font-size: 10px;
+    font-size: 12px;
     color: #666;
     gap: 6px;
     margin-top: 4px;
@@ -244,72 +248,28 @@ export default {
         transition: width 0.6s ease;
       }
     }
+
+    &.low-stock-item {
+      background: #fff0f0 !important; /* 更改为红色背景 */
+      color: #ff4d4f !important; /* 更改为红色字体 */
+    }
+
+    .low-stock-text {
+      color: #ff4d4f !important; /* 红色字体 */
+    }
   }
 }
 
-.price-section {
-  display: flex;
-  align-items: flex-end;
-  gap: 16px;
-  position: relative;
-  padding-top: 8px;
+.stock-bar {
+  height: 8px;
+  background-color: #67c23a; // 默认绿色
+  border-radius: 4px;
+  margin-top: 5px;
+  transition: all 0.3s;
+}
 
-  .current-price, .original-price {
-    display: flex;
-    flex-direction: column-reverse;
-    align-items: flex-start;
-
-    .price-label {
-      font-size: 12px;
-      color: #999;
-      margin-bottom: 2px;
-    }
-
-    .price-value {
-      font-weight: 700;
-      transition: color 0.3s ease;
-    }
-  }
-
-  .current-price {
-    .price-value {
-      font-size: 22px;
-      color: #ff4d4f;
-    }
-  }
-
-  .original-price {
-    .price-value {
-      font-size: 15px;
-      color: #999;
-      text-decoration: line-through;
-      position: relative;
-
-      &::after {
-        content: "";
-        position: absolute;
-        top: 50%;
-        left: 0;
-        width: 100%;
-        height: 1px;
-        background: #ff4d4f;
-        transform: translateY(-50%);
-      }
-    }
-  }
-
-  .discount-badge {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, #ff8a00, #ff3d00);
-    color: white;
-    padding: 2px 10px;
-    border-radius: 10px;
-    font-size: 12px;
-    font-weight: 600;
-    box-shadow: 0 2px 6px rgba(255, 61, 0, 0.2);
-  }
+.stock-bar.low-stock {
+  background-color: #f56c6c; // 红色警告
 }
 
 /* 响应式调整 */

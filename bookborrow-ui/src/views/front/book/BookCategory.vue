@@ -7,7 +7,7 @@
       </h3>
     </div>
 
-    <el-scrollbar :style="{ height: scrollHeight }" class="category-scrollbar">
+    <el-scrollbar class="category-scrollbar">
       <el-menu
         :default-active="activeCategory"
         class="category-menu"
@@ -15,18 +15,18 @@
       >
         <el-menu-item
           v-for="category in categories"
-          :key="category.id"
-          :index="category.id.toString()"
+          :key="category.categoryId"
+          :index="category.categoryId.toString()"
           class="category-item"
         >
           <template #title>
-            <span class="category-name">{{ category.name }}</span>
+            <span class="category-name">{{ category.categoryName }}</span>
             <el-tag
-              :type="activeCategory === category.id.toString() ? 'primary' : 'info'"
+              :type="activeCategory === category.categoryId.toString() ? 'primary' : 'info'"
               class="category-count"
               size="mini"
             >
-              {{ category.count }}
+              {{ category.bookCount }}
             </el-tag>
           </template>
         </el-menu-item>
@@ -54,11 +54,11 @@ export default {
       activeCategory: '0',
     }
   },
-  computed: {
-    scrollHeight() {
-      return `calc(${this.height} - 60px)`
-    }
-  },
+  // computed: {
+  //   scrollHeight() {
+  //     return `calc(${this.height} - 60px)`
+  //   }
+  // },
   methods: {
     handleSelect(index) {
       this.activeCategory = index
@@ -71,6 +71,11 @@ export default {
 <style lang="scss" scoped>
 .book-category {
   width: 240px;
+  height: 480px; // 设置固定高度
+  position: fixed; // 固定定位
+  top: 100px; // 距离顶部 100px，可根据需要调整
+  left: 20px; // 固定在页面左侧，可改为 right: 20px 定位右侧
+  z-index: 1000; // 保证浮在上层
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);

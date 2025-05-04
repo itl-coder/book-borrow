@@ -28,6 +28,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="bookCount"    column="book_count"    />
         <result property="borrowCount"    column="borrow_count"    />
     </resultMap>
+    <resultMap type="BookInfoCategoryVO" id="BookInfoCategoryVO">
+        <result property="categoryId"    column="category_id"    />
+        <result property="bookCount"    column="book_count"    />
+        <result property="categoryName"    column="category_name"    />
+    </resultMap>
 
     <sql id="selectBookInfoVo">
         select id, title, author, publisher, publish_date, category_id, category_name, price, stock, borrow_status, description, is_published, is_recommended, cover_url, create_time, update_time, is_deleted from book_info
@@ -61,6 +66,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SELECT COUNT(*)                              AS book_count,
                COUNT(IF(borrow_status = 1, 1, NULL)) AS borrow_count
         FROM book_info
+    </select>
+    <select id="selectBookInfoCategory" resultMap="BookInfoCategoryVO">
+        SELECT category_id, category_name, COUNT(*) AS book_count
+        FROM book_info
+        GROUP BY category_id, category_name
     </select>
 
     <insert id="insertBookInfo" parameterType="BookInfo" useGeneratedKeys="true" keyProperty="id">

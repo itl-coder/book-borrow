@@ -16,6 +16,14 @@ export function statusBook() {
   })
 }
 
+export function categoryBookList() {
+  return request({
+    url: '/bookinfo/book/front/category',
+    method: 'get'
+  })
+}
+
+
 // 查询图书信息（无外键约束）详细
 export function getBook(id) {
   return request({
