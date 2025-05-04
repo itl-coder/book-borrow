@@ -558,7 +558,7 @@ export default {
         this.$message.warning("当前图书已无库存");
         return;
       }
-      this.$emit("borrow", this.book.id);
+      // 借阅图书
     },
     addToList() {
       this.$emit("add-to-list", this.book.id);
