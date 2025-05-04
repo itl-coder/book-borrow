@@ -39,8 +39,12 @@
         @current-change="handlePageChange"
       />
     </div>
+
+    <!-- 返回顶部按钮 -->
+    <el-backtop :visibility-height="200" :right="50" :bottom="50" />
   </div>
 </template>
+
 <script>
 import BookItem from './BookItem'
 
@@ -76,6 +80,7 @@ export default {
   }
 }
 </script>
+
 <style scoped>
 .book-list {
   margin: 0 auto;
@@ -185,6 +190,11 @@ export default {
 .book-info p {
   font-size: 14px;
   color: #777;
+}
+
+/* 返回顶部按钮 */
+.el-backtop {
+  z-index: 9999; /* 保证它在最上层 */
 }
 
 @media (min-width: 1200px) {
