@@ -46,7 +46,7 @@ export default {
 .book-slider {
   width: 100%; /* 让容器宽度适应父元素宽度 */
   max-width: 1200px; /* 最大宽度为1200px */
-  margin: 0 auto; /* 确保居中对齐 */
+  margin: 10px auto; /* 确保居中对齐 */
   border-radius: 3px;
   overflow: hidden;
 

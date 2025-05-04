@@ -37,7 +37,7 @@ export default {
           id: 1,
           title: '百年孤独',
           subtitle: '魔幻现实主义经典小说',
-          image: '/profile/upload/2025/05/03/bg1_20250503195032A001.jpg',
+          image: 'http://localhost/dev-api/profile/upload/2025/05/03/bg1_20250503195032A001.jpg',
           link: '/book/1'
         },
         {
@@ -76,7 +76,7 @@ export default {
           "description": "魔幻现实主义经典小说",
           "isPublished": 0,
           "isRecommended": 1,
-          "coverUrl": "/profile/upload/2025/05/03/bg1_20250503195032A001.jpg",
+          "coverUrl": "http://localhost/dev-api/profile/upload/2025/05/03/bg1_20250503195032A001.jpg",
           "isDeleted": 0
         },
         {
@@ -98,7 +98,7 @@ export default {
           "description": "魔幻现实主义经典小说",
           "isPublished": 0,
           "isRecommended": 1,
-          "coverUrl": "/profile/upload/2025/05/03/bg1_20250503195032A001.jpg",
+          "coverUrl": "http://localhost/dev-api/profile/upload/2025/05/03/bg1_20250503195032A001.jpg",
           "isDeleted": 0
         },
         {

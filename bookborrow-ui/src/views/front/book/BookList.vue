@@ -23,7 +23,7 @@
     <!-- 图书项展示 -->
     <div class="book-items">
       <el-row :gutter="20">
-        <el-col v-for="book in books" :key="book.id" :span="6">
+        <el-col v-for="book in books" :key="book.id" :span="8">
           <book-item :book="book"/>
         </el-col>
       </el-row>

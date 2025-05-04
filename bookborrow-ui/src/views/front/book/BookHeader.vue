@@ -60,6 +60,7 @@ export default {
   z-index: 1000;
   height: 70px;
   transition: all 0.3s ease;
+  margin-bottom: 10px;
 }
 
 .header-container {
