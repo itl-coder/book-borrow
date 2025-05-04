@@ -56,6 +56,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="coverUrl != null  and coverUrl != ''"> and cover_url = #{coverUrl}</if>
             <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
         </where>
+        order by is_recommended desc
     </select>
     
     <select id="selectBookInfoById" parameterType="Long" resultMap="BookInfoResult">
@@ -71,6 +72,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SELECT category_id, category_name, COUNT(*) AS book_count
         FROM book_info
         GROUP BY category_id, category_name
+    </select>
+    <select id="selectBookInfoFrontList" parameterType="bookInfo" resultMap="BookInfoResult">
+        <include refid="selectBookInfoVo"/>
+        <where>
+            <if test="title != null  and title != ''">and title = #{title}</if>
+            <if test="author != null  and author != ''">and author = #{author}</if>
+            <if test="publisher != null  and publisher != ''">and publisher = #{publisher}</if>
+            <if test="publishDate != null ">and publish_date = #{publishDate}</if>
+            <if test="categoryId != null ">and category_id = #{categoryId}</if>
+            <if test="categoryName != null  and categoryName != ''">and category_name like concat('%', #{categoryName},
+                '%')
+            </if>
+            <if test="price != null ">and price = #{price}</if>
+            <if test="stock != null ">and stock = #{stock}</if>
+            <if test="borrowStatus != null ">and borrow_status = #{borrowStatus}</if>
+            <if test="description != null  and description != ''">and description = #{description}</if>
+            <if test="isPublished != null ">and is_published = #{isPublished}</if>
+            <if test="isRecommended != null ">and is_recommended = #{isRecommended}</if>
+            <if test="coverUrl != null  and coverUrl != ''">and cover_url = #{coverUrl}</if>
+            <if test="isDeleted != null ">and is_deleted = #{isDeleted}</if>
+        </where>
+        order by is_recommended desc
     </select>
 
     <insert id="insertBookInfo" parameterType="BookInfo" useGeneratedKeys="true" keyProperty="id">

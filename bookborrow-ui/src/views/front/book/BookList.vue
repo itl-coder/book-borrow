@@ -32,16 +32,18 @@
     <!-- 分页 -->
     <div class="pagination">
       <el-pagination
-        :page-size="4"
-        :total="100"
-        background
-        layout="prev, pager, next"
-        @current-change="handlePageChange"
-      />
+        :current-page="pageNum"
+        :page-size="pageSize"
+        :page-sizes="[3,10, 20, 30, 40]"
+        :total="total"
+        layout="total, sizes, prev, pager, next, jumper"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange">
+      </el-pagination>
     </div>
 
     <!-- 返回顶部按钮 -->
-    <el-backtop :visibility-height="200" :right="50" :bottom="50" />
+    <el-backtop :bottom="50" :right="50" :visibility-height="200"/>
   </div>
 </template>
 
@@ -57,6 +59,18 @@ export default {
     books: {
       type: Array,
       required: true
+    },
+    pageNum: {
+      type: Number,
+      required: true,
+    },
+    pageSize: {
+      type: Number,
+      required: true
+    },
+    total: {
+      type: Number,
+      required: true
     }
   },
   data() {
@@ -71,12 +85,17 @@ export default {
     }
   },
   methods: {
+    handleSizeChange(size) {
+      // 子组件发送 pageSize 的变化到父组件
+      this.$emit('update:pageSize', size);
+    },
+    handleCurrentChange(page) {
+      // 子组件发送 currentPage 的变化到父组件
+      this.$emit('update:currentPage', page);
+    },
     selectSort(value) {
       this.sortType = value
     },
-    handlePageChange(page) {
-      console.log('Page change:', page)
-    }
   }
 }
 </script>

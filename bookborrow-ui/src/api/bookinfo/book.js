@@ -9,6 +9,14 @@ export function listBook(query) {
   })
 }
 
+export function listFrontBook(query) {
+  return request({
+    url: '/bookinfo/book/front/list',
+    method: 'get',
+    params: query
+  })
+}
+
 export function statusBook() {
   return request({
     url: '/bookinfo/book/status',

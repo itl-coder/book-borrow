@@ -50,6 +50,14 @@ public class BookInfoController extends BaseController
         return getDataTable(list);
     }
 
+    @GetMapping("/front/list")
+    public TableDataInfo frontList(BookInfo bookInfo)
+    {
+        startPage();
+        List<BookInfo> list = bookInfoService.selectBookInfoFrontList(bookInfo);
+        return getDataTable(list);
+    }
+
     @PreAuthorize("@ss.hasPermi('bookinfo:book:list')")
     @GetMapping("/status")
     public AjaxResult statusList()

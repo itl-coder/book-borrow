@@ -64,4 +64,6 @@ public interface BookInfoMapper {
     public BookInfoStatusVO selectBookInfoStatus();
 
     public List<BookInfoCategoryVO> selectBookInfoCategory();
+
+    public List<BookInfo> selectBookInfoFrontList(BookInfo bookInfo);
 }

@@ -106,4 +106,9 @@ public class BookInfoServiceImpl implements IBookInfoService
     public List<BookInfoCategoryVO> selectBookInfoCategory() {
         return bookInfoMapper.selectBookInfoCategory();
     }
+
+    @Override
+    public List<BookInfo> selectBookInfoFrontList(BookInfo bookInfo) {
+        return bookInfoMapper.selectBookInfoFrontList(bookInfo);
+    }
 }

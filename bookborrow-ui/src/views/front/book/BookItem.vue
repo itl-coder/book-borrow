@@ -172,7 +172,9 @@ export default {
     color: #666;
     gap: 6px;
     margin-top: 4px;
-
+    white-space: nowrap;        /* 不换行 */
+    overflow: hidden;           /* 超出隐藏 */
+    text-overflow: ellipsis;    /* 超出用...表示 */
     .author {
       font-weight: 500;
       color: #444;
