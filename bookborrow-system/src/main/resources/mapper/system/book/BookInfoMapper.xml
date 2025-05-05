@@ -4,8 +4,9 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.book.borrow.book.mapper.BookInfoMapper">
 
+    <!-- 主实体映射 -->
     <resultMap type="BookInfo" id="BookInfoResult">
-        <result property="id" column="id"/>
+        <id property="id" column="id"/> <!-- 主键 -->
         <result property="title" column="title"/>
         <result property="author" column="author"/>
         <result property="publisher" column="publisher"/>
@@ -26,10 +27,13 @@
         <result property="borrowTime" column="borrow_time"/>
     </resultMap>
 
+    <!-- 统计状态视图 -->
     <resultMap type="BookInfoStatusVO" id="BookInfoStatusVOMap">
         <result property="bookCount" column="book_count"/>
         <result property="borrowCount" column="borrow_count"/>
     </resultMap>
+
+    <!-- 分类统计视图 -->
     <resultMap type="BookInfoCategoryVO" id="BookInfoCategoryVO">
         <result property="categoryId" column="category_id"/>
         <result property="bookCount" column="book_count"/>
@@ -37,28 +41,14 @@
     </resultMap>
 
     <sql id="selectBookInfoVo">
-        select id,
-               title,
-               author,
-               publisher,
-               publish_date,
-               category_id,
-               category_name,
-               price,
-               stock,
-               borrow_status,
-               description,
-               is_published,
-               is_recommended,
-               cover_url,
-               create_time,
-               update_time,
-               is_deleted,
-               isbn,
-               borrow_time
+        select id, title, author, publisher, publish_date,
+               category_id, category_name, price, stock, borrow_status,
+               description, is_published, is_recommended, cover_url,
+               create_time, update_time, is_deleted, isbn, borrow_time
         from book_info
     </sql>
 
+    <!-- 查询图书列表（含条件） -->
     <select id="selectBookInfoList" parameterType="BookInfo" resultMap="BookInfoResult">
         <include refid="selectBookInfoVo"/>
         <where>
@@ -67,8 +57,8 @@
             <if test="publisher != null  and publisher != ''">and publisher = #{publisher}</if>
             <if test="publishDate != null ">and publish_date = #{publishDate}</if>
             <if test="categoryId != null ">and category_id = #{categoryId}</if>
-            <if test="categoryName != null  and categoryName != ''">and category_name like concat('%', #{categoryName},
-                '%')
+            <if test="categoryName != null  and categoryName != ''">
+                and category_name like concat('%', #{categoryName}, '%')
             </if>
             <if test="price != null ">and price = #{price}</if>
             <if test="stock != null ">and stock = #{stock}</if>
@@ -77,72 +67,76 @@
             <if test="isPublished != null ">and is_published = #{isPublished}</if>
             <if test="isRecommended != null ">and is_recommended = #{isRecommended}</if>
             <if test="coverUrl != null  and coverUrl != ''">and cover_url = #{coverUrl}</if>
-            <if test="borrow_time != null  and borrow_time != ''">and borrow_time = #{borrow_time}</if>
+            <if test="borrowTime != null and borrowTime != ''">and borrow_time = #{borrowTime}</if>
             <if test="isDeleted != null ">and is_deleted = #{isDeleted}</if>
+            <!-- 固定过滤 -->
+            and is_deleted = 0
         </where>
         order by is_recommended desc
     </select>
 
+    <!-- 根据ID查单条记录 -->
     <select id="selectBookInfoById" parameterType="Long" resultMap="BookInfoResult">
         <include refid="selectBookInfoVo"/>
         where id = #{id}
     </select>
+
+    <!-- 图书状态统计 -->
     <select id="selectBookInfoStatus" resultMap="BookInfoStatusVOMap">
-        SELECT COUNT(*)                              AS book_count,
+        SELECT COUNT(*) AS book_count,
                COUNT(IF(borrow_status = 1, 1, NULL)) AS borrow_count
         FROM book_info
     </select>
+
+    <!-- 图书分类统计 -->
     <select id="selectBookInfoCategory" resultMap="BookInfoCategoryVO">
         SELECT category_id, category_name, COUNT(*) AS book_count
         FROM book_info
         GROUP BY category_id, category_name
     </select>
+
+    <!-- 前台图书列表，含动态排序 -->
     <select id="selectBookInfoFrontList" parameterType="BookInfoSortVO" resultMap="BookInfoResult">
         <include refid="selectBookInfoVo"/>
         <where>
-            <if test="title != null  and title != ''">and title like concat('%',#{title},'%')</if>
-            <if test="author != null  and author != ''">and author = #{author}</if>
-            <if test="publisher != null  and publisher != ''">and publisher = #{publisher}</if>
-            <if test="publishDate != null ">and publish_date = #{publishDate}</if>
-            <if test="categoryId != null ">and category_id = #{categoryId}</if>
-            <if test="categoryName != null  and categoryName != ''">and category_name like concat('%', #{categoryName},
-                '%')
+            <if test="title != null and title != ''">and title like concat('%',#{title},'%')</if>
+            <if test="author != null and author != ''">and author = #{author}</if>
+            <if test="publisher != null and publisher != ''">and publisher = #{publisher}</if>
+            <if test="publishDate != null">and publish_date = #{publishDate}</if>
+            <if test="categoryId != null">and category_id = #{categoryId}</if>
+            <if test="categoryName != null and categoryName != ''">
+                and category_name like concat('%', #{categoryName}, '%')
             </if>
-            <if test="price != null ">and price = #{price}</if>
-            <if test="stock != null ">and stock = #{stock}</if>
-            <if test="borrowStatus != null ">and borrow_status = #{borrowStatus}</if>
-            <if test="description != null  and description != ''">and description = #{description}</if>
-            <if test="isPublished != null ">and is_published = #{isPublished}</if>
-            <if test="isRecommended != null ">and is_recommended = #{isRecommended}</if>
-            <if test="coverUrl != null  and coverUrl != ''">and cover_url = #{coverUrl}</if>
-            <if test="borrow_time != null  and borrow_time != ''">and borrow_time = #{borrow_time}</if>
-            <if test="isDeleted != null ">and is_deleted = #{isDeleted}</if>
+            <if test="price != null">and price = #{price}</if>
+            <if test="stock != null">and stock = #{stock}</if>
+            <if test="borrowStatus != null">and borrow_status = #{borrowStatus}</if>
+            <if test="description != null and description != ''">and description = #{description}</if>
+            <if test="isPublished != null">and is_published = #{isPublished}</if>
+            <if test="isRecommended != null">and is_recommended = #{isRecommended}</if>
+            <if test="coverUrl != null and coverUrl != ''">and cover_url = #{coverUrl}</if>
+            <if test="borrowTime != null and borrowTime != ''">and borrow_time = #{borrowTime}</if>
+            <if test="isDeleted != null">and is_deleted = #{isDeleted}</if>
         </where>
-
-        <!-- 动态排序 -->
         <if test="sortField != null and sortField != ''">
             ORDER BY
             <choose>
                 <when test="sortField == 'publishDate'">publish_date</when>
                 <when test="sortField == 'recommended'">is_recommended</when>
-                <otherwise>id</otherwise> <!-- 默认按id -->
+                <otherwise>id</otherwise>
             </choose>
-            <if test="sortOrder != null and sortOrder == 'asc'">
-                ASC
-            </if>
-            <if test="sortOrder != null and sortOrder == 'desc'">
-                DESC
-            </if>
+            <if test="sortOrder == 'asc'">ASC</if>
+            <if test="sortOrder == 'desc'">DESC</if>
         </if>
         <if test="sortField == null or sortField == ''">
             ORDER BY is_recommended DESC
         </if>
     </select>
 
+    <!-- 插入图书 -->
     <insert id="insertBookInfo" parameterType="BookInfo" useGeneratedKeys="true" keyProperty="id">
         insert into book_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="borrow_time != null  and borrow_time != ''"> borrow_time,</if>
+            <if test="borrowTime != null and borrowTime != ''">borrow_time,</if>
             <if test="title != null and title != ''">title,</if>
             <if test="author != null">author,</if>
             <if test="publisher != null">publisher,</if>
@@ -162,8 +156,8 @@
             <if test="isDeleted != null">is_deleted,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="borrowTime != null and borrowTime != ''">#{borrowTime},</if>
             <if test="title != null and title != ''">#{title},</if>
-            <if test="borrow_time != null  and borrow_time != ''"> #{borrow_time}</if>
             <if test="author != null">#{author},</if>
             <if test="publisher != null">#{publisher},</if>
             <if test="publishDate != null">#{publishDate},</if>
@@ -183,12 +177,13 @@
         </trim>
     </insert>
 
+    <!-- 更新图书（不更新createTime） -->
     <update id="updateBookInfo" parameterType="BookInfo">
         update book_info
         <trim prefix="SET" suffixOverrides=",">
             <if test="title != null and title != ''">title = #{title},</if>
             <if test="isbn != null and isbn != ''">isbn = #{isbn},</if>
-            <if test="borrow_time != null and borrow_time != ''">borrow_time = #{borrow_time},</if>
+            <if test="borrowTime != null and borrowTime != ''">borrow_time = #{borrowTime},</if>
             <if test="author != null">author = #{author},</if>
             <if test="publisher != null">publisher = #{publisher},</if>
             <if test="publishDate != null">publish_date = #{publishDate},</if>
@@ -201,19 +196,18 @@
             <if test="isPublished != null">is_published = #{isPublished},</if>
             <if test="isRecommended != null">is_recommended = #{isRecommended},</if>
             <if test="coverUrl != null">cover_url = #{coverUrl},</if>
-            <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
         </trim>
         where id = #{id}
     </update>
 
+    <!-- 删除图书（物理删除） -->
     <delete id="deleteBookInfoById" parameterType="Long">
-        delete
-        from book_info
-        where id = #{id}
+        delete from book_info where id = #{id}
     </delete>
 
+    <!-- 批量删除 -->
     <delete id="deleteBookInfoByIds" parameterType="String">
         delete from book_info where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
