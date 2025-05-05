@@ -512,6 +512,7 @@ import BookHeader from "@/views/front/book/BookHeader.vue";
 import YFooter from "@/views/components/footer/YFooter.vue";
 import {getBook, getRelatedBooks} from "@/api/bookinfo/book";
 import {addLend} from "@/api/bookinfo/lend";
+import {bookCoverUrl} from "@/utils/previewImg"
 
 export default {
   name: "BookDetailCard",
@@ -554,6 +555,27 @@ export default {
           });
       }
     },
+    /**
+     * 生成 7 天后的日期，并将时间设置为下午 18:00:00
+     * 返回格式为 yyyy-MM-dd HH:mm:ss
+     */
+    getDueTimeAfter7DaysAtSixPM() {
+      const now = new Date();
+      const due = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+      // 设置时间为 18:00:00
+      due.setHours(18, 0, 0, 0);
+
+      const year = due.getFullYear();
+      const month = String(due.getMonth() + 1).padStart(2, '0');
+      const day = String(due.getDate()).padStart(2, '0');
+      const hours = String(due.getHours()).padStart(2, '0');
+      const minutes = String(due.getMinutes()).padStart(2, '0');
+      const seconds = String(due.getSeconds()).padStart(2, '0');
+
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    }
+    ,
     borrowBook() {
       const userid = this.$store.state.user.id;
       const username = this.$store.state.user.name;
@@ -567,13 +589,9 @@ export default {
         this.$message.warning("当前图书已无库存");
         return;
       }
-      let now = new Date();
-      let dueTime = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString(); // 当前时间 + 7 天
-
-      console.log("this book: ", this.book)
       let bookParam = {
         userId: userid,
-        username: username,
+        userName: username,
         bookId: this.book.id,
         bookName: this.book.title,
         status: 0,
@@ -581,8 +599,8 @@ export default {
         borrowTime: this.book.borrowTime + 1,
         categoryId: this.book.categoryId,
         categoryName: this.book.categoryName,
-        imgCover: this.book.coverUrl,
-        dueTime: dueTime
+        imgCover: bookCoverUrl(this.book.coverUrl),
+        dueTime: this.getDueTimeAfter7DaysAtSixPM()
       }
       // 借阅图书
       addLend(bookParam).then(res => {
@@ -590,22 +608,26 @@ export default {
           this.$message.warning("已经借阅图书: " + this.book.title + ",请于七天后归还！")
         }
       })
-    },
+    }
+    ,
     addToList() {
       this.$emit("add-to-list", this.book.id);
       this.$message.success("已加入书单");
     }
   },
   watch: {
-    '$route.params.id': {
-      handler(newId) {
-        if (newId) {
-          this.getBookById();
-          this.fetchRelatedBooks();
+    '$route.params.id':
+      {
+        handler(newId) {
+          if (newId) {
+            this.getBookById();
+            this.fetchRelatedBooks();
+          }
         }
-      },
-      immediate: true
-    }
+        ,
+        immediate: true
+      }
   }
-};
+}
+;
 </script>
