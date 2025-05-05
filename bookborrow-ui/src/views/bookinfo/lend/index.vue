@@ -28,13 +28,19 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="分类名称" prop="categoryName" class="form-item">
-                <el-input
+                <el-select
                   v-model="queryParams.categoryName"
                   clearable
-                  placeholder="请输入分类名称"
-                  @keyup.enter.native="handleQuery"
-                  prefix-icon="el-icon-collection-tag"
-                />
+                  placeholder="请选择分类"
+                  style="width: 100%"
+                >
+                  <el-option
+                    v-for="item in bookCategoryList"
+                    :key="item.id"
+                    :label="item.categoryName"
+                    :value="item.categoryName"
+                  />
+                </el-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -190,15 +196,13 @@
         </el-table-column>
       </el-table>
 
-      <div class="pagination-container">
-        <pagination
-          v-show="total>0"
-          :limit.sync="queryParams.pageSize"
-          :page.sync="queryParams.pageNum"
-          :total="total"
-          @pagination="getList"
-        />
-      </div>
+      <pagination
+        v-show="total>0"
+        :limit.sync="queryParams.pageSize"
+        :page.sync="queryParams.pageNum"
+        :total="total"
+        @pagination="getList"
+      />
     </el-card>
 
     <!-- 添加或修改图书借阅对话框 -->
@@ -647,7 +651,6 @@ export default {
 
 .book-cover {
   width: 50px;
-  height: 70px;
   border-radius: 4px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 
