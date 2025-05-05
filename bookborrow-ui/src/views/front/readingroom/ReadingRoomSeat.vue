@@ -1,6 +1,6 @@
 <template>
   <div class="room-container">
-    <el-card class="room-card">
+    <el-card class="room-card" shadow="hover">
       <div slot="header">
         <span>{{ room.name }}</span>
         <el-button
