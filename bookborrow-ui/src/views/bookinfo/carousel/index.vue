@@ -56,8 +56,8 @@
         </el-table-column>
         <el-table-column label="状态" width="100" align="center">
           <template slot-scope="scope">
-            <el-tag :type="scope.row.status === '1' ? 'success' : 'danger'">
-              {{ scope.row.status === '1' ? '启用' : '停用' }}
+            <el-tag :type="scope.row.status == '1' ? 'success' : 'danger'">
+              {{ scope.row.status == '1' ? '启用中' : '停用' }}
             </el-tag>
           </template>
         </el-table-column>

@@ -9,6 +9,13 @@ export function listCarousel(query) {
   })
 }
 
+export function frontListCarousel() {
+  return request({
+    url: '/bookinfo/carousel/front/list',
+    method: 'get',
+  })
+}
+
 // 查询轮播图详细
 export function getCarousel(id) {
   return request({

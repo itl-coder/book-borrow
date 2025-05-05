@@ -93,4 +93,9 @@ public class CarouselServiceImpl implements ICarouselService
     {
         return carouselMapper.deleteCarouselById(id);
     }
+
+    @Override
+    public List<Carousel> selectCarouselFrontList() {
+        return carouselMapper.selectCarouselFrontList();
+    }
 }

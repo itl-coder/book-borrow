@@ -3,7 +3,7 @@
     <el-carousel :interval="5000" arrow="always" height="380px" indicator-position="outside">
       <el-carousel-item v-for="slide in slides" :key="slide.id">
         <div
-          :style="{ backgroundImage: `linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%), url(${slide.image})` }"
+          :style="{ backgroundImage: `linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%), url(${bookCoverUrl(slide.imageUrl)})` }"
           class="slide-content"
         >
           <div class="slide-text">
@@ -25,6 +25,8 @@
 </template>
 
 <script>
+import {bookCoverUrl} from "@/utils/previewImg";
+
 export default {
   name: 'BookSlider',
   props: {
@@ -35,8 +37,9 @@ export default {
     }
   },
   methods: {
+    bookCoverUrl,
     goToDetail(link) {
-      this.$router.push(link)
+      // this.$router.push(link)
     }
   }
 }

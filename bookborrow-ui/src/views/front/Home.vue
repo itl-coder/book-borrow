@@ -39,6 +39,7 @@ import BookList from '@/views/front/book/BookList'
 import BookCategory from '@/views/front/book/BookCategory'
 import YFooter from "@/views/components/footer/YFooter.vue"
 import {categoryBookList, listFrontBook} from "@/api/bookinfo/book"
+import {frontListCarousel} from "@/api/bookinfo/carousel";
 
 export default {
   name: 'Home',
@@ -61,27 +62,18 @@ export default {
         pageSize: 3,     // 每页大小
         total: 0,  // 总条目数
       },
-      slides: [
-        {
-          id: 1,
-          title: '百年孤独',
-          subtitle: '魔幻现实主义经典小说',
-          image: 'http://localhost/dev-api/profile/upload/2025/05/03/bg1_20250503195032A001.jpg',
-          link: '/book/1'
-        },
-        {
-          id: 2,
-          title: '三体全集',
-          subtitle: '中国硬核科幻代表作',
-          image: 'https://example.com/covers/santi.jpg',
-          link: '/book/7'
-        }
-      ],
+      slides: [],
       categories: [],
       books: []
     }
   },
   methods: {
+    getSlide() {
+      frontListCarousel().then(res => {
+        console.log("frontListCarousel: ", res)
+        this.slides = res.data
+      })
+    },
     sortBookInfo(sortParam) {
       this.query.sortField = sortParam.sortField
       this.query.sortOrder = sortParam.sortOrder
@@ -124,6 +116,7 @@ export default {
   created() {
     this.getBookCategory()
     this.getBookList()
+    this.getSlide()
   }
 }
 </script>
@@ -200,6 +193,7 @@ export default {
   font-size: 14px;
   color: #777;
 }
+
 .content-wrapper {
   display: flex;
   justify-content: space-between;

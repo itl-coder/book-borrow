@@ -39,7 +39,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectCarouselVo"/>
         where id = #{id}
     </select>
-        
+    <select id="selectCarouselFrontList" resultMap="CarouselResult">
+        SELECT *
+        from carousel
+        where is_deleted = '0'
+          and `status` = '1'
+        order by sort desc
+    </select>
+
     <insert id="insertCarousel" parameterType="Carousel" useGeneratedKeys="true" keyProperty="id">
         insert into carousel
         <trim prefix="(" suffix=")" suffixOverrides=",">

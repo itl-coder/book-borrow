@@ -47,6 +47,17 @@ public class CarouselController extends BaseController
     }
 
     /**
+     * 查询轮播图列表
+     */
+    @PreAuthorize("@ss.hasPermi('bookinfo:carousel:list')")
+    @GetMapping("/front/list")
+    public AjaxResult frontList()
+    {
+        List<Carousel> list = carouselService.selectCarouselFrontList();
+        return success(list);
+    }
+
+    /**
      * 导出轮播图列表
      */
     @PreAuthorize("@ss.hasPermi('bookinfo:carousel:export')")
