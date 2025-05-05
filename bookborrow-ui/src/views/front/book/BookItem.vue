@@ -1,7 +1,7 @@
 <template>
   <div class="book-item" @click="goToDetail(book.id)">
     <div class="book-cover">
-      <img :alt="book.title" :src="book.coverUrl"/>
+      <img :alt="book.title" :src="book.coverUrl | bookCoverUrl"/>
       <span v-if="book.isRecommended" class="custom-tag recommended">推荐</span>
       <span v-if="book.stock <= 10" class="custom-tag discount">特价</span>
     </div>

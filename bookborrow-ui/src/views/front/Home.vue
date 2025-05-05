@@ -31,6 +31,7 @@ import BookList from '@/views/front/book/BookList'
 import BookCategory from '@/views/front/book/BookCategory'
 import YFooter from "@/views/components/footer/YFooter.vue"
 import {categoryBookList, listFrontBook} from "@/api/bookinfo/book"
+import {bookCoverUrl} from "@/utils/previewImg";
 
 export default {
   name: 'Home',
