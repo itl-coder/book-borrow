@@ -15,18 +15,47 @@
         <el-menu-item index="5">计算机</el-menu-item>
         <el-menu-item index="6">特价专区</el-menu-item>
       </el-menu>
-      <div class="search-box" v-if="showFlag">
+      <div v-if="showFlag" class="search-box">
         <el-input
           v-model="searchText"
           placeholder="请输入图书名"
           @keyup.enter.native="handleSearch"
         >
-          <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
+          <el-button
+            slot="append"
+            icon="el-icon-search"
+            @click="handleSearch"
+          ></el-button>
         </el-input>
       </div>
       <div class="user-actions">
-        <el-button icon="el-icon-user" type="text"></el-button>
-        <el-button icon="el-icon-shopping-cart" type="text"></el-button>
+        <template
+          v-if="loginInfo.nickName == undefined || loginInfo.nickName == ''"
+        >
+          <el-dropdown @command="handleCommand">
+            <span class="el-dropdown-link">
+              <el-avatar
+                :size="40"
+                :src="loginInfo.avatar | bookCoverUrl"
+              ></el-avatar>
+              <span style="margin-left: 8px">{{ loginInfo.nickName }}</span>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="myAppointment"
+                >我的预约</el-dropdown-item
+              >
+              <el-dropdown-item command="borrowHistory"
+                >借阅历史</el-dropdown-item
+              >
+              <el-dropdown-item command="logout" divided
+                >退出登录</el-dropdown-item
+              >
+            </el-dropdown-menu>
+          </el-dropdown>
+        </template>
+        <template v-else>
+          <span class="login-text" @click="goToLogin">登录</span>
+        </template>
       </div>
     </div>
   </div>
@@ -34,29 +63,50 @@
 
 <script>
 export default {
-  name: 'BookHeader',
+  name: "BookHeader",
   props: {
     showFlag: {
       type: Boolean,
-      require: true
-    }
+      require: true,
+    },
   },
   data() {
     return {
-      activeIndex: '1',
-      searchText: ''
-    }
+      loginInfo: {
+        userName: "",
+        avatar: "",
+        nickName: "",
+      },
+      activeIndex: "1",
+      searchText: "",
+    };
+  },
+  created() {
+    this.getLoginUserName();
   },
   methods: {
+    goToLogin() {
+      // 这里根据你的路由配置跳转到登录页
+      this.$router.push("/login");
+    },
+    getLoginUserName() {
+      this.$store.dispatch("GetInfo").then((resp) => {
+        this.userName = resp.user.userName;
+        console.log("resp: ", resp);
+      });
+    },
+    handleCommand(command) {
+      this.$message("click on item " + command);
+    },
     handleSelect(key) {
-      console.log('select menu:', key)
+      console.log("select menu:", key);
     },
     handleSearch() {
-      console.log('search:', this.searchText)
-      this.$emit('search-book', this.searchText)
-    }
-  }
-}
+      console.log("search:", this.searchText);
+      this.$emit("search-book", this.searchText);
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -131,5 +181,23 @@ export default {
 .user-actions {
   display: flex;
   align-items: center;
+  margin-left: 10px;
+}
+
+.el-dropdown-link {
+  cursor: pointer;
+  color: #409eff;
+}
+
+.el-icon-arrow-down {
+  font-size: 12px;
+}
+
+.login-text {
+  cursor: pointer;
+  color: #409eff;
+}
+.login-text:hover {
+  text-decoration: underline;
 }
 </style>

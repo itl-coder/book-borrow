@@ -1,16 +1,19 @@
 <template>
   <div class="book-home">
     <!-- 顶部导航 -->
-    <book-header :showFlag="showFlag" @search-book="searchBook"/>
+    <book-header :showFlag="showFlag" @search-book="searchBook" />
     <div class="book-main-container">
       <!-- 轮播图 -->
-      <book-slider :slides="slides"/>
+      <book-slider :slides="slides" />
 
       <!-- 主内容区域 -->
       <div class="content-wrapper banner">
         <!-- 左侧分类栏 -->
         <div class="left-side">
-          <book-category :categories="categories" @category-change="categoryChangeHandle"/>
+          <book-category
+            :categories="categories"
+            @category-change="categoryChangeHandle"
+          />
         </div>
 
         <!-- 右侧图书列表 -->
@@ -26,99 +29,98 @@
           />
         </div>
       </div>
-
     </div>
-    <y-footer/>
+    <y-footer />
   </div>
 </template>
 
 <script>
-import BookHeader from '@/views/front/book/BookHeader'
-import BookSlider from '@/views/front/book/BookSlider'
-import BookList from '@/views/front/book/BookList'
-import BookCategory from '@/views/front/book/BookCategory'
-import YFooter from "@/views/components/footer/YFooter.vue"
-import {categoryBookList, listFrontBook} from "@/api/bookinfo/book"
-import {frontListCarousel} from "@/api/bookinfo/carousel";
+import BookHeader from "@/views/front/book/BookHeader";
+import BookSlider from "@/views/front/book/BookSlider";
+import BookList from "@/views/front/book/BookList";
+import BookCategory from "@/views/front/book/BookCategory";
+import YFooter from "@/views/components/footer/YFooter.vue";
+import { categoryBookList, listFrontBook } from "@/api/bookinfo/book";
+import { frontListCarousel } from "@/api/bookinfo/carousel";
 
 export default {
-  name: 'Home',
+  name: "Home",
   components: {
     BookHeader,
     BookSlider,
     BookList,
     BookCategory,
-    YFooter
+    YFooter,
   },
   data() {
     return {
       showFlag: true, // 是否显示搜索
       query: {
-        sortField: '',
-        sortOrder: '',
-        categoryId: '', // 分类id
-        title: '', // 图书名称
-        pageNum: 1,   // 当前页
-        pageSize: 3,     // 每页大小
-        total: 0,  // 总条目数
+        sortField: "",
+        sortOrder: "",
+        categoryId: "", // 分类id
+        title: "", // 图书名称
+        pageNum: 1, // 当前页
+        pageSize: 3, // 每页大小
+        total: 0, // 总条目数
       },
       slides: [],
       categories: [],
-      books: []
-    }
+      books: [],
+    };
   },
   methods: {
     getSlide() {
-      frontListCarousel().then(res => {
-        console.log("frontListCarousel: ", res)
-        this.slides = res.data
-      })
+      frontListCarousel().then((res) => {
+        console.log("frontListCarousel: ", res);
+        this.slides = res.data;
+      });
     },
     sortBookInfo(sortParam) {
-      this.query.sortField = sortParam.sortField
-      this.query.sortOrder = sortParam.sortOrder
-      this.getBookList()
+      this.query.sortField = sortParam.sortField;
+      this.query.sortOrder = sortParam.sortOrder;
+      this.getBookList();
     },
     searchBook(bookName) {
-      this.query.title = bookName
-      this.getBookList()
+      this.query.title = bookName;
+      this.getBookList();
     },
     handleCurrentPageChange(page) {
       this.query.pageNum = page;
-      this.getBookList()
+      this.getBookList();
       // 这里可以执行任何需要的逻辑，例如重新获取分页数据
-      console.log('Current Page changed:', page);
+      console.log("Current Page changed:", page);
     },
     handlePageSizeChange(size) {
       this.query.pageSize = size;
-      this.getBookList()
+      this.getBookList();
       // 这里可以执行任何需要的逻辑，例如重新获取分页数据
-      console.log('Page Size changed:', size);
+      console.log("Page Size changed:", size);
     },
     getBookList() {
-      listFrontBook(this.query).then(res => {
-        console.log("getBookList: ", res)
-        this.books = res.rows
-        this.query.total = res.total
-      })
+      listFrontBook(this.query).then((res) => {
+        console.log("getBookList: ", res);
+        this.books = res.rows;
+        this.query.total = res.total;
+      });
     },
     categoryChangeHandle(categoryId) {
-      console.log("categoryChangeHandle: ", categoryId)
-      this.query.categoryId = categoryId
-      this.getBookList()
+      console.log("categoryChangeHandle: ", categoryId);
+      this.query.categoryId = categoryId;
+      this.getBookList();
     },
     getBookCategory() {
-      categoryBookList().then(response => {
-        this.categories = response.data
-      })
-    }
+      categoryBookList().then((response) => {
+        this.categories = response.data;
+      });
+    },
   },
   created() {
-    this.getBookCategory()
-    this.getBookList()
-    this.getSlide()
-  }
-}
+    this.getBookCategory();
+    this.getBookList();
+    this.getSlide();
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -211,5 +213,4 @@ export default {
   flex: 1; // 自动撑满剩余空间
   min-width: 0; // 防止溢出，特别在 flex 下很重要
 }
-
 </style>

@@ -49,7 +49,6 @@ public class CarouselController extends BaseController
     /**
      * 查询轮播图列表
      */
-    @PreAuthorize("@ss.hasPermi('bookinfo:carousel:list')")
     @GetMapping("/front/list")
     public AjaxResult frontList()
     {
