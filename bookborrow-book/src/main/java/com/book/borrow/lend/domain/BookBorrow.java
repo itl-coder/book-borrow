@@ -57,7 +57,7 @@ public class BookBorrow extends BaseEntity {
      * 分类名称
      */
     @Excel(name = "分类名称")
-    private Long categoryName;
+    private String categoryName;
 
     /**
      * 借出时间

@@ -51,6 +51,12 @@
         <include refid="selectBookBorrowVo"/>
         where id = #{id}
     </select>
+    <select id="countRepeatBorrow" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM book_borrow
+        WHERE user_id = #{userId}
+          AND book_id = #{bookId}
+    </select>
 
     <insert id="insertBookBorrow" parameterType="BookBorrow" useGeneratedKeys="true" keyProperty="id">
         insert into book_borrow

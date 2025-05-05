@@ -59,4 +59,6 @@ public interface IBookBorrowService {
      * @return 结果
      */
     public int deleteBookBorrowById(Long id);
+
+   public int countRepeatBorrow(Long userId, Long bookId);
 }

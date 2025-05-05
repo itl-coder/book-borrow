@@ -2,6 +2,7 @@ package com.book.borrow.lend.mapper;
 
 
 import com.book.borrow.lend.domain.BookBorrow;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -59,4 +60,6 @@ public interface BookBorrowMapper {
      * @return 结果
      */
     public int deleteBookBorrowByIds(Long[] ids);
+
+    public int countRepeatBorrow(@Param("userId") Long userId,@Param("bookId") Long bookId);
 }

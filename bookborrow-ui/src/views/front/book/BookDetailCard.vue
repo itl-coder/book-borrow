@@ -511,6 +511,7 @@
 import BookHeader from "@/views/front/book/BookHeader.vue";
 import YFooter from "@/views/components/footer/YFooter.vue";
 import {getBook, getRelatedBooks} from "@/api/bookinfo/book";
+import {addLend} from "@/api/bookinfo/lend";
 
 export default {
   name: "BookDetailCard",
@@ -554,11 +555,41 @@ export default {
       }
     },
     borrowBook() {
+      const userid = this.$store.state.user.id;
+      const username = this.$store.state.user.name;
+
+      console.log("loginUserId: ", userid, username)
+      if (userid == undefined || userid == '') {
+        return;
+      }
+
       if (this.book.stock <= 0) {
         this.$message.warning("当前图书已无库存");
         return;
       }
+      let now = new Date();
+      let dueTime = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString(); // 当前时间 + 7 天
+
+      console.log("this book: ", this.book)
+      let bookParam = {
+        userId: userid,
+        username: username,
+        bookId: this.book.id,
+        bookName: this.book.title,
+        status: 0,
+        lateFee: 0,
+        borrowTime: this.book.borrowTime + 1,
+        categoryId: this.book.categoryId,
+        categoryName: this.book.categoryName,
+        imgCover: this.book.coverUrl,
+        dueTime: dueTime
+      }
       // 借阅图书
+      addLend(bookParam).then(res => {
+        if (res.code === 200) {
+          this.$message.warning("已经借阅图书: " + this.book.title + ",请于七天后归还！")
+        }
+      })
     },
     addToList() {
       this.$emit("add-to-list", this.book.id);

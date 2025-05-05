@@ -88,4 +88,9 @@ public class BookBorrowServiceImpl implements IBookBorrowService {
     public int deleteBookBorrowById(Long id) {
         return bookBorrowMapper.deleteBookBorrowById(id);
     }
+
+    @Override
+    public int countRepeatBorrow(Long userId, Long bookId) {
+        return bookBorrowMapper.countRepeatBorrow(userId,bookId);
+    }
 }
