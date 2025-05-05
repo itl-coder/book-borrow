@@ -48,7 +48,6 @@ export default {
   max-width: 1200px; /* 最大宽度为1200px */
   margin: 10px auto; /* 确保居中对齐 */
   border-radius: 3px;
-  overflow: hidden;
 
   .el-carousel__arrow {
     background-color: rgba(255, 255, 255, 0.2);

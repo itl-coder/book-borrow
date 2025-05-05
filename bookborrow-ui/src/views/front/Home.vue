@@ -2,23 +2,31 @@
   <div class="book-home">
     <!-- 顶部导航 -->
     <book-header :showFlag="showFlag" @search-book="searchBook"/>
-    <div class="main-container">
+    <div class="book-main-container">
       <!-- 轮播图 -->
       <book-slider :slides="slides"/>
 
       <!-- 主内容区域 -->
       <div class="content-wrapper banner">
-        <!-- 吸顶分类列表 -->
-        <book-category :categories="categories" @category-change="categoryChangeHandle"/>
-        <!-- 图书列表 -->
-        <book-list :books="books"
-                   :pageNum="query.pageNum"
-                   :pageSize="query.pageSize"
-                   :total="query.total"
-                   @sort-change="sortBookInfo"
-                   @update:currentPage="handleCurrentPageChange"
-                   @update:pageSize="handlePageSizeChange"/>
+        <!-- 左侧分类栏 -->
+        <div class="left-side">
+          <book-category :categories="categories" @category-change="categoryChangeHandle"/>
+        </div>
+
+        <!-- 右侧图书列表 -->
+        <div class="right-side">
+          <book-list
+            :books="books"
+            :pageNum="query.pageNum"
+            :pageSize="query.pageSize"
+            :total="query.total"
+            @sort-change="sortBookInfo"
+            @update:currentPage="handleCurrentPageChange"
+            @update:pageSize="handlePageSizeChange"
+          />
+        </div>
       </div>
+
     </div>
     <y-footer/>
   </div>
@@ -31,7 +39,6 @@ import BookList from '@/views/front/book/BookList'
 import BookCategory from '@/views/front/book/BookCategory'
 import YFooter from "@/views/components/footer/YFooter.vue"
 import {categoryBookList, listFrontBook} from "@/api/bookinfo/book"
-import {bookCoverUrl} from "@/utils/previewImg";
 
 export default {
   name: 'Home',
@@ -193,4 +200,22 @@ export default {
   font-size: 14px;
   color: #777;
 }
+.content-wrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 20px;
+  align-items: flex-start;
+}
+
+.left-side {
+  width: 240px;
+  flex-shrink: 0; // 防止收缩
+}
+
+.right-side {
+  flex: 1; // 自动撑满剩余空间
+  min-width: 0; // 防止溢出，特别在 flex 下很重要
+}
+
 </style>

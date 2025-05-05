@@ -26,5 +26,8 @@ export default {
   display: none;
 }
 
-
+.banner {
+  width: 1200px;
+  margin: 0 auto;
+}
 </style>
