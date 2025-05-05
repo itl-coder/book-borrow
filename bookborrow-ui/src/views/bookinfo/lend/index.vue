@@ -2,37 +2,50 @@
   <div class="app-container">
     <el-card shadow="never" class="search-card">
       <div class="filter-container">
-        <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="100px" size="medium">
+        <el-form
+          v-show="showSearch"
+          ref="queryForm"
+          :model="queryParams"
+          label-width="100px"
+          size="medium"
+          class="search-form"
+        >
+          <!-- 第一行：搜索条件 -->
           <el-row :gutter="20">
-            <el-col :span="8">
-              <el-form-item label="用户名" prop="userName" class="form-item">
+            <el-col :xs="24" :sm="12" :md="12" :lg="12">
+              <el-form-item label="用户名" prop="userName">
                 <el-input
                   v-model="queryParams.userName"
                   clearable
                   placeholder="请输入用户名"
                   @keyup.enter.native="handleQuery"
                   prefix-icon="el-icon-user"
+                  class="full-width-input"
                 />
               </el-form-item>
             </el-col>
-            <el-col :span="8">
-              <el-form-item label="图书名称" prop="bookName" class="form-item">
+
+            <el-col :xs="24" :sm="12" :md="12" :lg="12">
+              <el-form-item label="图书名称" prop="bookName">
                 <el-input
                   v-model="queryParams.bookName"
                   clearable
                   placeholder="请输入图书名称"
                   @keyup.enter.native="handleQuery"
                   prefix-icon="el-icon-notebook-2"
+                  class="full-width-input"
                 />
               </el-form-item>
             </el-col>
-            <el-col :span="8">
-              <el-form-item label="分类名称" prop="categoryName" class="form-item">
+
+            <el-col :xs="24" :sm="12" :md="12" :lg="12">
+              <el-form-item label="图书分类" prop="categoryName">
                 <el-select
                   v-model="queryParams.categoryName"
                   clearable
-                  placeholder="请选择分类"
-                  style="width: 100%"
+                  filterable
+                  placeholder="全部分类"
+                  class="full-width-input"
                 >
                   <el-option
                     v-for="item in bookCategoryList"
@@ -43,11 +56,65 @@
                 </el-select>
               </el-form-item>
             </el-col>
+
+            <el-col :xs="24" :sm="12" :md="12" :lg="12">
+              <el-form-item label="借阅状态" prop="status">
+                <el-select
+                  v-model="queryParams.status"
+                  clearable
+                  placeholder="全部状态"
+                  class="full-width-input"
+                >
+                  <el-option label="借出中" :value="0" />
+                  <el-option label="已归还" :value="1" />
+                  <el-option label="已逾期" :value="2" />
+                </el-select>
+              </el-form-item>
+            </el-col>
           </el-row>
-          <el-row>
-            <el-col :span="24" style="text-align: right; padding-right: 20px;">
-              <el-button type="primary" icon="el-icon-search" size="medium" @click="handleQuery">搜索</el-button>
-              <el-button icon="el-icon-refresh-left" size="medium" @click="resetQuery">重置</el-button>
+
+          <!-- 第二行：操作按钮 -->
+          <el-row type="flex" justify="end">
+            <el-col :span="24" class="form-actions">
+              <el-button
+                type="primary"
+                icon="el-icon-search"
+                size="medium"
+                @click="handleQuery"
+              >
+                搜索
+              </el-button>
+              <el-button
+                icon="el-icon-refresh"
+                size="medium"
+                @click="resetQuery"
+              >
+                重置
+              </el-button>
+              <el-button
+                type="warning"
+                size="medium"
+                @click="toggleAdvancedSearch"
+              >
+                {{ showAdvanced ? '收起' : '高级搜索' }}
+                <i :class="showAdvanced ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"></i>
+              </el-button>
+            </el-col>
+          </el-row>
+
+          <!-- 第三行：高级搜索 -->
+          <el-row v-show="showAdvanced" :gutter="20">
+            <el-col :xs="24" :sm="24" :md="24" :lg="24">
+              <el-form-item label="借出时间" prop="borrowTimeRange">
+                <el-date-picker
+                  v-model="queryParams.borrowTimeRange"
+                  type="daterange"
+                  range-separator="至"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"
+                  class="full-width-input"
+                />
+              </el-form-item>
             </el-col>
           </el-row>
         </el-form>
@@ -147,7 +214,7 @@
             <span>{{ scope.row.lateFee || '0.00' }} 元</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="状态" prop="deleted" width="100">
+        <el-table-column align="center" label="数据状态" prop="deleted" width="100">
           <template slot-scope="scope">
             <el-tag
               :effect="scope.row.deleted === 0 ? 'dark' : 'plain'"
@@ -323,7 +390,7 @@
 
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="状态" prop="deleted">
+            <el-form-item label="数据状态" prop="deleted">
               <el-select
                 v-model="form.deleted"
                 placeholder="请选择状态"
@@ -381,6 +448,7 @@ export default {
   name: "Lend",
   data() {
     return {
+      showAdvanced: false,
       bookCategoryList: [],
       // 遮罩层
       loading: true,
@@ -460,6 +528,9 @@ export default {
     this.getCountFrontCategoryList();
   },
   methods: {
+    toggleAdvancedSearch() {
+      this.showAdvanced = !this.showAdvanced;
+    },
     handleCategoryIdChange() {
       const selectedCategory = this.bookCategoryList.find(item => item.id === this.form.categoryId);
       if (selectedCategory) {
@@ -604,7 +675,6 @@ export default {
   }
 };
 </script>
-
 <style lang="scss" scoped>
 .app-container {
   padding: 20px;
@@ -613,14 +683,6 @@ export default {
 
 .search-card {
   margin-bottom: 20px;
-
-  .filter-container {
-    padding: 20px 20px 0;
-  }
-
-  .form-item {
-    margin-bottom: 20px;
-  }
 }
 
 .table-card {
@@ -742,7 +804,30 @@ export default {
     text-align: right;
   }
 }
-.el-button-group .el-button{
+
+.search-form {
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.full-width-input {
+  width: 100%;
+}
+
+.form-actions {
+  text-align: right;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+  margin-top: 10px;
+}
+
+.el-col .el-form-item {
+  margin-top: 15px;
+}
+
+.el-button-group .el-button {
   margin-right: 15px;
 }
 </style>
