@@ -114,6 +114,7 @@
         <el-table-column align="center" label="主键ID" prop="id" width="100"/>
         <el-table-column align="center" label="用户名" prop="userName" width="120"/>
         <el-table-column align="center" label="图书名称" prop="bookName" width="150" show-overflow-tooltip/>
+        <el-table-column align="center" label="备注信息" prop="remark" width="150" show-overflow-tooltip/>
         <el-table-column align="center" label="分类名称" prop="categoryName" width="120"/>
         <el-table-column align="center" label="借出时间" prop="borrowTime" width="180">
           <template slot-scope="scope">
@@ -612,7 +613,6 @@ export default {
 
 .search-card {
   margin-bottom: 20px;
-  border-radius: 4px;
 
   .filter-container {
     padding: 20px 20px 0;
@@ -651,7 +651,6 @@ export default {
 
 .book-cover {
   width: 50px;
-  border-radius: 4px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 
   .image-slot {
@@ -668,7 +667,6 @@ export default {
 .dialog-cover {
   width: 120px;
   height: 160px;
-  border-radius: 4px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 
   .image-slot {
@@ -743,5 +741,8 @@ export default {
     padding: 10px 20px 20px;
     text-align: right;
   }
+}
+.el-button-group .el-button{
+  margin-right: 15px;
 }
 </style>
