@@ -96,7 +96,9 @@ export default {
       });
     },
     handleCommand(command) {
-      this.$message("click on item " + command);
+      if(command=='myAppointment'){
+        this.$router.push("/seat")
+      }
     },
     handleSelect(key) {
       console.log("select menu:", key);

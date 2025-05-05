@@ -1,28 +1,30 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="20">
-      <el-col :span="24">
-        <h2>图书馆阅览室座位系统</h2>
-        <el-select v-model="currentRoomId" placeholder="请选择阅览室" @change="changeRoom">
-          <el-option
-            v-for="room in roomOptions"
-            :key="room.id"
-            :label="room.name"
-            :value="room.id"
-          ></el-option>
-        </el-select>
+    <book-header/>
+    <el-card shadow="never">
+      <el-row :gutter="20">
+        <el-col :span="24">
+          <el-select v-model="currentRoomId" placeholder="请选择阅览室" @change="changeRoom">
+            <el-option
+              v-for="room in roomOptions"
+              :key="room.id"
+              :label="room.name"
+              :value="room.id"
+            ></el-option>
+          </el-select>
 
-        <reading-room-seat
-          ref="roomCanvas"
-          :room-id="currentRoomId"
-          @seat-selected="handleSeatSelected"
-        />
-      </el-col>
-    </el-row>
-
+          <reading-room-seat
+            ref="roomCanvas"
+            :room-id="currentRoomId"
+            @seat-selected="handleSeatSelected"
+          />
+        </el-col>
+      </el-row>
+    </el-card>
+    <YFooter/>
     <el-dialog
-      title="座位预约"
       :visible.sync="dialogVisible"
+      title="座位预约"
       width="30%"
     >
       <p>您选择了: {{ selectedSeat ? selectedSeat.name : '' }}号座位</p>
@@ -30,8 +32,8 @@
         <el-form-item label="预约时间">
           <el-date-picker
             v-model="reservationTime"
-            type="datetime"
             placeholder="选择预约时间"
+            type="datetime"
             value-format="yyyy-MM-dd HH:mm:ss"
           ></el-date-picker>
         </el-form-item>
@@ -46,19 +48,23 @@
 
 <script>
 import ReadingRoomSeat from '@/views/front/readingroom/ReadingRoomSeat.vue'
+import BookHeader from "@/views/front/book/BookHeader.vue";
+import YFooter from "@/views/components/footer/YFooter.vue";
 
 export default {
   name: 'LibraryRoom',
   components: {
-    ReadingRoomSeat
+    BookHeader,
+    ReadingRoomSeat,
+    YFooter
   },
   data() {
     return {
       currentRoomId: 'room1',
       roomOptions: [
-        { id: 'room1', name: '第一阅览室' },
-        { id: 'room2', name: '第二阅览室' },
-        { id: 'room3', name: '第三阅览室' }
+        {id: 'room1', name: '第一阅览室'},
+        {id: 'room2', name: '第二阅览室'},
+        {id: 'room3', name: '第三阅览室'}
       ],
       selectedSeat: null,
       dialogVisible: false,

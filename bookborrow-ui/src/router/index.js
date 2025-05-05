@@ -51,6 +51,11 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/seat',
+    component: () => import('@/views/front/readingroom/index.vue'),
+    hidden: true
+  },
+  {
     path: '/book/:id',
     component: () => import('@/views/front/book/BookDetailCard.vue'),
     hidden: true
