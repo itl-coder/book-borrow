@@ -62,7 +62,7 @@ export default {
         id: '',
         name: '',
         width: 1000,
-        height: 700,
+        height: 600,
         seats: [],
         bookshelves: [],
         aisles: []

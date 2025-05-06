@@ -42,7 +42,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectReadingRoomVo"/>
         where id = #{id}
     </select>
-        
+    <select id="selectReadingRoomCountFrontList" resultMap="ReadingRoomResult">
+        SELECT * from reading_room
+    </select>
+
     <insert id="insertReadingRoom" parameterType="ReadingRoom" useGeneratedKeys="true" keyProperty="id">
         insert into reading_room
         <trim prefix="(" suffix=")" suffixOverrides=",">

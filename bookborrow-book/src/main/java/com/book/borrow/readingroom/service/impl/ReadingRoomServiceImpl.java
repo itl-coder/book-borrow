@@ -93,4 +93,9 @@ public class ReadingRoomServiceImpl implements IReadingRoomService
     {
         return readingRoomMapper.deleteReadingRoomById(id);
     }
+
+    @Override
+    public List<ReadingRoom> selectReadingRoomCountFrontList() {
+        return readingRoomMapper.selectReadingRoomCountFrontList();
+    }
 }

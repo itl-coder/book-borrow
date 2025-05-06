@@ -9,6 +9,13 @@ export function listReadingroom(query) {
   })
 }
 
+export function countFrontListReadingroom() {
+  return request({
+    url: '/bookinfo/readingroom/front/list',
+    method: 'get',
+  })
+}
+
 // 查询阅览室信息详细
 export function getReadingroom(id) {
   return request({

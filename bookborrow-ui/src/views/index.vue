@@ -1,18 +1,7 @@
 <template>
   <div class="app-container">
-
     <el-row :gutter="20">
       <el-col :span="24">
-        <h2>图书馆阅览室座位系统</h2>
-        <el-select v-model="currentRoomId" placeholder="请选择阅览室" @change="changeRoom">
-          <el-option
-            v-for="room in roomOptions"
-            :key="room.id"
-            :label="room.name"
-            :value="room.id"
-          ></el-option>
-        </el-select>
-
         <reading-room-seat
           ref="roomCanvas"
           :room-id="currentRoomId"
@@ -58,11 +47,7 @@ export default {
   data() {
     return {
       currentRoomId: 'room1',
-      roomOptions: [
-        {id: 'room1', name: '第一阅览室'},
-        {id: 'room2', name: '第二阅览室'},
-        {id: 'room3', name: '第三阅览室'}
-      ],
+      roomOptions: [],
       selectedSeat: null,
       dialogVisible: false,
       reservationTime: ''

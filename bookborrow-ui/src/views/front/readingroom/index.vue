@@ -4,20 +4,12 @@
     <el-card shadow="never">
       <el-row :gutter="20">
         <el-col :span="24">
-          <el-select v-model="currentRoomId" placeholder="请选择阅览室" @change="changeRoom">
-            <el-option
-              v-for="room in roomOptions"
-              :key="room.id"
-              :label="room.name"
-              :value="room.id"
-            ></el-option>
-          </el-select>
-
-          <reading-room-seat
-            ref="roomCanvas"
-            :room-id="currentRoomId"
-            @seat-selected="handleSeatSelected"
-          />
+          <reading-room :roomOptions="roomOptions"/>
+          <!--          <reading-room-seat-->
+          <!--            ref="roomCanvas"-->
+          <!--            :room-id="currentRoomId"-->
+          <!--            @seat-selected="handleSeatSelected"-->
+          <!--          />-->
         </el-col>
       </el-row>
     </el-card>
@@ -50,28 +42,36 @@
 import ReadingRoomSeat from '@/views/front/readingroom/ReadingRoomSeat.vue'
 import BookHeader from "@/views/front/book/BookHeader.vue";
 import YFooter from "@/views/components/footer/YFooter.vue";
+import {countFrontListReadingroom} from "@/api/bookinfo/readingroom";
+import ReadingRoom from "@/views/front/readingroom/ReadingRoom.vue";
 
 export default {
   name: 'LibraryRoom',
   components: {
+    ReadingRoom,
     BookHeader,
     ReadingRoomSeat,
     YFooter
   },
   data() {
     return {
-      currentRoomId: 'room1',
-      roomOptions: [
-        {id: 'room1', name: '第一阅览室'},
-        {id: 'room2', name: '第二阅览室'},
-        {id: 'room3', name: '第三阅览室'}
-      ],
+      currentRoomId: '',
+      roomOptions: [],
       selectedSeat: null,
       dialogVisible: false,
       reservationTime: ''
     }
   },
+  created() {
+    this.getReadRoomList()
+  },
   methods: {
+    getReadRoomList() {
+      countFrontListReadingroom().then(res => {
+        console.log("countFrontListReadingroom: ", res)
+        this.roomOptions = res.data
+      })
+    },
     handleSeatSelected(seat) {
       this.selectedSeat = seat;
       this.dialogVisible = true;
