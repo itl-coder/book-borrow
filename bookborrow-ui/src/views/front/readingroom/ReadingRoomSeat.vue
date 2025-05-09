@@ -1,7 +1,7 @@
 <template>
   <div class="room-container">
     <el-card class="room-card" shadow="hover">
-      <div slot="header">
+      <div slot="header" class="header-room-card">
         <span>{{ room.name }}</span>
         <el-button
           style="float: right; padding: 3px 0"
@@ -15,8 +15,8 @@
       <div class="canvas-container">
         <canvas
           ref="roomCanvas"
-          :width="room.width"
           :height="room.height"
+          :width="room.width"
           @click="handleCanvasClick"
         ></canvas>
       </div>
@@ -123,10 +123,10 @@ export default {
     addBookshelves() {
       // 四周的书架
       this.room.bookshelves.push(
-        { x: 0, y: 0, width: 40, height: this.room.height }, // 左侧
-        { x: this.room.width - 40, y: 0, width: 40, height: this.room.height }, // 右侧
-        { x: 40, y: 0, width: this.room.width - 80, height: 30 }, // 上方
-        { x: 40, y: this.room.height - 30, width: this.room.width - 80, height: 30 } // 下方
+        {x: 0, y: 0, width: 40, height: this.room.height}, // 左侧
+        {x: this.room.width - 40, y: 0, width: 40, height: this.room.height}, // 右侧
+        {x: 40, y: 0, width: this.room.width - 80, height: 30}, // 上方
+        {x: 40, y: this.room.height - 30, width: this.room.width - 80, height: 30} // 下方
       );
 
       // 中间的书架 (垂直)
@@ -247,7 +247,7 @@ export default {
         }
 
         this.ctx.beginPath();
-        this.ctx.arc(chairX + chairSize/2, chairY + chairSize/2, chairSize/2, 0, Math.PI * 2);
+        this.ctx.arc(chairX + chairSize / 2, chairY + chairSize / 2, chairSize / 2, 0, Math.PI * 2);
         this.ctx.fill();
         this.ctx.strokeStyle = '#333';
         this.ctx.stroke();
@@ -314,6 +314,15 @@ export default {
 
 .room-card {
   width: 100%;
+  .el-card__header{
+    padding: 20px;
+  }
+}
+
+.header-room-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .canvas-container {
