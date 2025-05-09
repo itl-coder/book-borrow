@@ -112,7 +112,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/bookinfo/book/front/category",
                         "/bookinfo/book/front/list",
                         "/bookinfo/carousel/front/list",
-                        "/bookinfo/readingroom/front/list"
+                        "/bookinfo/readingroom/front/list",
+                        "/bookinfo/book/{id}"
                 ).permitAll()
                 // 静态资源，可匿名访问
                 .antMatchers(HttpMethod.GET, "/", "/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "/profile/**").permitAll()

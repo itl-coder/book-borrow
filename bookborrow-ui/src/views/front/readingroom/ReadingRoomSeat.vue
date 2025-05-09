@@ -49,7 +49,7 @@
 
 <script>
 export default {
-  name: 'LibraryRoom',
+  name: 'ReadingRoomSeat',
   props: {
     roomId: {
       type: String,

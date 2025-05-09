@@ -98,6 +98,8 @@ export default {
     handleCommand(command) {
       if(command=='myAppointment'){
         this.$router.push("/seat")
+      }if(command=='borrowHistory'){
+        this.$router.push(`/borrow`)
       }
     },
     handleSelect(key) {

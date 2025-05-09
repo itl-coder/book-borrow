@@ -7,6 +7,7 @@ import com.book.borrow.common.core.page.TableDataInfo;
 import com.book.borrow.common.enums.BusinessType;
 import com.book.borrow.common.utils.poi.ExcelUtil;
 import com.book.borrow.lend.domain.BookBorrow;
+import com.book.borrow.lend.domain.vo.BookBorrowVO;
 import com.book.borrow.lend.service.IBookBorrowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -65,13 +66,9 @@ public class BookBorrowController extends BaseController {
     @PreAuthorize("@ss.hasPermi('bookinfo:lend:add')")
     @Log(title = "图书借阅关系", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody BookBorrow bookBorrow) {
-        // 检测这本书用户是否已经借阅,借阅时,不可以重复借阅
-        int repeatFlag = bookBorrowService.countRepeatBorrow(bookBorrow.getUserId(), bookBorrow.getBookId());
-        if (repeatFlag > 0) {
-            throw new RuntimeException(bookBorrow.getBookName() + "已经借阅,请勿重复借阅!");
-        }
-        return toAjax(bookBorrowService.insertBookBorrow(bookBorrow));
+    public AjaxResult add(@RequestBody BookBorrowVO bookBorrow) {
+        int borrowFlag = bookBorrowService.bookBorrowed(bookBorrow);
+        return toAjax(borrowFlag);
     }
 
     /**

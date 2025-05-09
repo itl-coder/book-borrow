@@ -596,6 +596,7 @@ export default {
         bookName: this.book.title,
         status: 0,
         lateFee: 0,
+        stock: this.book.stock,
         borrowTime: this.book.borrowTime + 1,
         categoryId: this.book.categoryId,
         categoryName: this.book.categoryName,
@@ -606,6 +607,7 @@ export default {
       addLend(bookParam).then(res => {
         if (res.code === 200) {
           this.$message.warning("已经借阅图书: " + this.book.title + ",请于七天后归还！")
+          this.getBookById()
         }
       })
     }

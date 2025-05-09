@@ -67,4 +67,5 @@ public interface BookInfoMapper {
     public List<BookInfoCategoryVO> selectBookInfoCategory();
 
     public List<BookInfo> selectBookInfoFrontList(BookInfoSortVO bookInfoSortVO);
+
 }

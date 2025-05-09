@@ -37,6 +37,7 @@
 
       <el-dialog :title="currentRoom.roomName + ' - 详细信息'" :visible.sync="dialogVisible" width="50%">
         <div class="room-info">
+          <!-- 基本信息展示 -->
           <div class="info-row">
             <span class="info-label">位置：</span>
             <span>{{ currentRoom.location }}</span>
@@ -63,15 +64,30 @@
           <div class="room-image">
             <img :src="currentRoom.coverImageUrl | bookCoverUrl" alt="阅览室图片" style="max-width: 100%; margin-top: 15px;">
           </div>
+
+          <!-- 新增的座位选择组件 -->
+          <div style="margin-top: 20px;">
+            <reading-room-seat v-if="dialogVisible && currentRoom.id" :room-id="'room' + currentRoom.id" @seat-selected="handleSeatSelected" />
+          </div>
         </div>
+        <template v-if="selectedSeat">
+          <div class="info-row" style="margin-top: 15px;">
+            <span class="info-label">当前选择座位：</span>
+            <el-tag type="info">{{ selectedSeat.name }}</el-tag>
+          </div>
+        </template>
       </el-dialog>
+
     </el-card>
   </div>
 </template>
 
 <script>
+import ReadingRoomSeat from "@/views/front/readingroom/ReadingRoomSeat.vue";
+
 export default {
   name: 'ReadingRoom',
+  components: {ReadingRoomSeat},
   props: {
     roomOptions: {
       type: Array,
@@ -115,6 +131,10 @@ export default {
     }
   },
   methods: {
+    handleSeatSelected(seat) {
+      this.selectedSeat = seat;
+      this.$message.success(`你选择了座位：${seat.name}`);
+    },
     initCanvas() {
       const canvas = this.$refs.libraryCanvas;
       this.ctx = canvas.getContext('2d');

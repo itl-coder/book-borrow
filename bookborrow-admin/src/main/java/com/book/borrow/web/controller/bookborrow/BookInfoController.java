@@ -92,7 +92,7 @@ public class BookInfoController extends BaseController
     /**
      * 获取图书信息（无外键约束）详细信息
      */
-    @PreAuthorize("@ss.hasPermi('bookinfo:book:query')")
+    // @PreAuthorize("@ss.hasPermi('bookinfo:book:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {

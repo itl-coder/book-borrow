@@ -2,6 +2,7 @@ package com.book.borrow.lend.service;
 
 
 import com.book.borrow.lend.domain.BookBorrow;
+import com.book.borrow.lend.domain.vo.BookBorrowVO;
 
 import java.util.List;
 
@@ -60,5 +61,7 @@ public interface IBookBorrowService {
      */
     public int deleteBookBorrowById(Long id);
 
-   public int countRepeatBorrow(Long userId, Long bookId);
+    public int countRepeatBorrow(Long userId, Long bookId);
+
+    public int bookBorrowed(BookBorrowVO bookBorrow);
 }

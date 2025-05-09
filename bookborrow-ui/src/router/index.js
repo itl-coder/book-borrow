@@ -46,6 +46,11 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/borrow',
+    component: () => import('@/views/front/book/BookBorrowHistory.vue'),
+    hidden: true
+  },
+  {
     path: '/front/index',
     component: () => import('@/views/front/Home.vue'),
     hidden: true
