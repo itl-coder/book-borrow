@@ -1,11 +1,16 @@
 <template>
   <div class="book-borrow-container">
+    <book-header />
     <div class="page-header">
       <div class="header-content">
         <h1 class="page-title">我的借阅</h1>
         <p class="page-subtitle">管理您当前借阅的图书</p>
       </div>
-      <el-tabs v-model="activeTab" class="custom-tabs" @tab-click="handleTabClick">
+      <el-tabs
+        v-model="activeTab"
+        class="custom-tabs"
+        @tab-click="handleTabClick"
+      >
         <el-tab-pane label="在借中" name="borrowing"></el-tab-pane>
         <el-tab-pane label="已逾期" name="overdue"></el-tab-pane>
         <el-tab-pane label="借书历史" name="history"></el-tab-pane>
@@ -13,14 +18,19 @@
     </div>
 
     <div class="content-wrapper">
-      <div v-loading="loading" class="book-list" element-loading-background="rgba(255, 255, 255, 0.7)">
+      <div
+        v-loading="loading"
+        class="book-list"
+        element-loading-background="rgba(255, 255, 255, 0.7)"
+      >
         <transition-group class="transition-container" name="list" tag="div">
           <el-card
             v-for="book in borrowList"
             :key="book.id"
             :body-style="{ padding: '0' }"
             class="book-card"
-            shadow="hover">
+            shadow="hover"
+          >
             <div class="card-content">
               <div class="book-cover-container">
                 <div class="book-cover">
@@ -29,7 +39,8 @@
                     :src="book.imgCover | bookCoverUrl"
                     :style="{ backgroundColor: '#f5f5f5' }"
                     class="cover-image"
-                    fit="contain">
+                    fit="cover"
+                  >
                     <div slot="error" class="image-slot">
                       <div class="cover-placeholder">
                         <i class="el-icon-notebook-2"></i>
@@ -37,15 +48,7 @@
                     </div>
                   </el-image>
                 </div>
-                <div v-if="isOverdue(book.dueTime)" class="overdue-ribbon">逾期</div>
-                <div class="book-status">
-                  <span v-if="isOverdue(book.dueTime)" class="status-badge overdue">
-                    <i class="el-icon-warning"></i> 逾期
-                  </span>
-                  <span v-else class="status-badge normal">
-                    <i class="el-icon-success"></i> 在借中
-                  </span>
-                </div>
+                <!-- 移除逾期标签，因为历史记录不需要 -->
               </div>
 
               <div class="book-info">
@@ -59,51 +62,110 @@
                 <div class="book-meta">
                   <div class="meta-row">
                     <i class="el-icon-user meta-icon"></i>
-                    <span class="meta-text">借阅人: {{ book.userName || '匿名用户' }}</span>
+                    <span class="meta-text"
+                      >借阅人: {{ book.userName || "匿名用户" }}</span
+                    >
                   </div>
 
                   <div class="meta-row">
                     <i class="el-icon-date meta-icon"></i>
-                    <span class="meta-text">借阅日期: {{ formatTime(book.borrowTime) }}</span>
+                    <span class="meta-text"
+                      >借阅日期: {{ formatTime(book.borrowTime) }}</span
+                    >
                   </div>
 
-                  <div :class="{ 'overdue-row': isOverdue(book.dueTime) }" class="meta-row">
-                    <i class="el-icon-alarm-clock meta-icon"></i>
-                    <span class="meta-text">应还日期: {{ formatTime(book.dueTime) }}</span>
-                    <el-tag v-if="isOverdue(book.dueTime)" class="overdue-tag" effect="dark" size="mini" type="danger">
+                  <div class="meta-row">
+                    <i class="el-icon-time meta-icon"></i>
+                    <span class="meta-text">
+                      {{ activeTab === "history" ? "归还日期" : "应还日期" }}:
+                      {{
+                        activeTab === "history"
+                          ? formatTime(book.returnTime)
+                          : formatTime(book.dueTime)
+                      }}
+                    </span>
+                    <!-- 只在非历史页面显示逾期标签 -->
+                    <el-tag
+                      v-if="activeTab !== 'history' && isOverdue(book.dueTime)"
+                      class="overdue-tag"
+                      effect="dark"
+                      size="mini"
+                      type="danger"
+                    >
                       逾期 {{ calculateOverdueDays(book.dueTime) }} 天
                     </el-tag>
                   </div>
+
+                  <!-- 添加借阅时长显示 -->
+                  <div v-if="activeTab === 'history'" class="meta-row">
+                    <i class="el-icon-timer meta-icon"></i>
+                    <span class="meta-text">
+                      借阅时长:
+                      {{
+                        calculateBorrowDuration(
+                          book.borrowTime,
+                          book.returnTime
+                        )
+                      }}
+                    </span>
+                  </div>
                 </div>
 
+                <!-- 操作按钮区域 - 根据tab显示不同按钮 -->
                 <div class="book-actions">
-                  <el-tooltip content="续借可延长30天借阅期" placement="top">
+                  <!-- 历史记录只显示查看详情按钮 -->
+                  <template v-if="activeTab === 'history'">
                     <el-button
-                      :disabled="isOverdue(book.dueTime)"
-                      class="action-btn renew-btn"
+                      class="action-btn detail-btn"
                       plain
                       size="small"
-                      type="primary"
-                      @click="handleRenew(book)">
-                      <i class="el-icon-refresh-left"></i> 续借
+                      @click="handleViewDetail(book)"
+                    >
+                      <i class="el-icon-document"></i> 查看详情
                     </el-button>
-                  </el-tooltip>
-                  <el-button
-                    :type="isOverdue(book.dueTime) ? 'danger' : 'success'"
-                    class="action-btn return-btn"
-                    plain
-                    size="small"
-                    @click="handleReturn(book)">
-                    <i class="el-icon-circle-check"></i> 归还
-                  </el-button>
+                  </template>
+
+                  <!-- 非历史记录显示续借和归还按钮 -->
+                  <template v-else>
+                    <el-tooltip content="续借可延长30天借阅期" placement="top">
+                      <el-button
+                        :disabled="isOverdue(book.dueTime)"
+                        class="action-btn renew-btn"
+                        plain
+                        size="small"
+                        type="primary"
+                        @click="handleRenew(book)"
+                      >
+                        <i class="el-icon-refresh-left"></i> 续借
+                      </el-button>
+                    </el-tooltip>
+                    <el-button
+                      :type="isOverdue(book.dueTime) ? 'danger' : 'success'"
+                      class="action-btn return-btn"
+                      plain
+                      size="small"
+                      @click="handleReturn(book)"
+                    >
+                      <i class="el-icon-circle-check"></i> 归还
+                    </el-button>
+                  </template>
                 </div>
               </div>
             </div>
           </el-card>
         </transition-group>
 
-        <el-empty v-if="borrowList.length === 0" class="empty-state" description="暂无借阅记录">
-          <el-button size="small" type="primary" @click="$router.push('/front/index')">去借书</el-button>
+        <el-empty
+          v-if="borrowList.length === 0"
+          class="empty-state"
+          description="暂无借阅记录"
+        >
+          <el-button
+            size="small"
+            type="primary"
+            @click="$router.push('/front/index')"
+            >去借书
+          </el-button>
         </el-empty>
       </div>
 
@@ -114,20 +176,26 @@
           :page-size="pageSize"
           :page-sizes="[5, 10, 15, 20]"
           :total="total"
+          hide-on-single-page
           layout="total, sizes, prev, pager, next, jumper"
           @current-change="handlePageChange"
-          @size-change="handlePageSizeChange">
+          @size-change="handlePageSizeChange"
+        >
         </el-pagination>
       </div>
     </div>
+
+    <YFooter />
   </div>
 </template>
 
 <script>
-import {listLend} from "@/api/bookinfo/lend";
-import moment from 'moment';
-
+import { listLend } from "@/api/bookinfo/lend";
+import moment from "moment";
+import BookHeader from "@/views/front/book/BookHeader.vue";
+import YFooter from "@/views/components/footer/YFooter.vue";
 export default {
+  components: { BookHeader, YFooter },
   data() {
     return {
       total: 0,
@@ -135,13 +203,13 @@ export default {
       pageSize: 5,
       loading: false,
       status: 2, // 查看逾期的
-      activeTab: 'overdue', // 逾期的激活页
-      borrowList: []
-    }
+      activeTab: "overdue", // 逾期的激活页
+      borrowList: [],
+    };
   },
   methods: {
     formatTime(time) {
-      return moment(time).format('YYYY-MM-DD');
+      return moment(time).format("YYYY-MM-DD");
     },
     handlePageChange(page) {
       this.pageNum = page;
@@ -163,48 +231,56 @@ export default {
       return moment(dueTime).isBefore(moment());
     },
     calculateOverdueDays(dueTime) {
-      return moment().diff(moment(dueTime), 'days');
+      return moment().diff(moment(dueTime), "days");
     },
     handleRenew(book) {
-      this.$confirm(`确定要续借《${book.bookName}》吗? 续借后将延长30天借阅期。`, '续借确认', {
-        confirmButtonText: '确认续借',
-        cancelButtonText: '再想想',
-        type: 'info',
-        center: true
-      }).then(() => {
-        this.$message.success('续借成功，借阅期已延长');
-      }).catch(() => {
-      });
+      this.$confirm(
+        `确定要续借《${book.bookName}》吗? 续借后将延长30天借阅期。`,
+        "续借确认",
+        {
+          confirmButtonText: "确认续借",
+          cancelButtonText: "再想想",
+          type: "info",
+          center: true,
+        }
+      )
+        .then(() => {
+          this.$message.success("续借成功，借阅期已延长");
+        })
+        .catch(() => {});
     },
     handleReturn(book) {
       const isOverdue = this.isOverdue(book.dueTime);
       const fee = isOverdue ? this.calculateLateFee(book.dueTime) : 0;
 
-      const title = isOverdue ? '归还逾期书籍' : '归还确认';
+      const title = isOverdue ? "归还逾期书籍" : "归还确认";
       const message = isOverdue
         ? `《${book.bookName}》已逾期，应缴纳逾期费用 ￥${fee}，确认归还？`
         : `确定要归还《${book.bookName}》吗?`;
 
       this.$confirm(message, title, {
-        confirmButtonText: '确认归还',
-        cancelButtonText: '取消',
-        type: isOverdue ? 'warning' : 'info',
-        center: true
-      }).then(() => {
-        this.$message.success(isOverdue
-          ? `归还成功，已计入逾期费用 ￥${fee}`
-          : '归还申请已提交，请将书籍归还至图书馆');
-      }).catch(() => {
-      });
+        confirmButtonText: "确认归还",
+        cancelButtonText: "取消",
+        type: isOverdue ? "warning" : "info",
+        center: true,
+      })
+        .then(() => {
+          this.$message.success(
+            isOverdue
+              ? `归还成功，已计入逾期费用 ￥${fee}`
+              : "归还申请已提交，请将书籍归还至图书馆"
+          );
+        })
+        .catch(() => {});
     },
     handleTabClick(tab) {
-      this.activeTab = tab.name
+      this.activeTab = tab.name;
       // 根据activeTab设置API查询的status
       switch (tab.name) {
-        case 'borrowing':
+        case "borrowing":
           this.status = 0; // 在借中
           break;
-        case 'history':
+        case "history":
           this.status = 1; // 借书历史(已归还的书)
           break;
         default: // 已逾期
@@ -213,27 +289,48 @@ export default {
       this.pageNum = 1;
       this.fetchBorrowList();
     },
+    // 添加计算借阅时长的方法
+    calculateBorrowDuration(startTime, endTime) {
+      console.log("time: ", startTime, endTime);
+      const start = moment(startTime);
+      const end = moment(endTime);
+      const duration = moment.duration(end.diff(start));
+
+      if (duration.asDays() > 30) {
+        return `${Math.floor(duration.asMonths())}个月${Math.floor(
+          duration.asDays() % 30
+        )}天`;
+      }
+      return `${Math.floor(duration.asDays())}天`;
+    },
+
+    // 添加查看详情方法
+    handleViewDetail(book) {
+      this.$router.push(`/front/book-detail/${book.bookId}`);
+    },
     fetchBorrowList() {
       this.loading = true;
 
       let query = {
         pageNum: this.pageNum,
         pageSize: this.pageSize,
-        status: this.status
-      }
-      listLend(query).then(res => {
-        this.borrowList = res.rows;
-        this.loading = false;
-        this.total = res.total;
-      }).catch(() => {
-        this.loading = false;
-      });
-    }
+        status: this.status,
+      };
+      listLend(query)
+        .then((res) => {
+          this.borrowList = res.rows;
+          this.loading = false;
+          this.total = res.total;
+        })
+        .catch(() => {
+          this.loading = false;
+        });
+    },
   },
   created() {
     this.fetchBorrowList();
-  }
-}
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -255,13 +352,13 @@ export default {
   overflow: hidden;
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
     width: 4px;
     height: 100%;
-    background: linear-gradient(to bottom, #409EFF, #67C23A);
+    background: linear-gradient(to bottom, #409eff, #67c23a);
   }
 }
 
@@ -285,7 +382,6 @@ export default {
 
 .content-wrapper {
   background: #fff;
-  border-radius: 12px;
   padding: 24px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   flex: 1;
@@ -306,17 +402,17 @@ export default {
     font-weight: 500;
 
     &:hover {
-      color: #409EFF;
+      color: #409eff;
     }
   }
 
   ::v-deep .el-tabs__item.is-active {
-    color: #409EFF;
+    color: #409eff;
     font-weight: 600;
   }
 
   ::v-deep .el-tabs__active-bar {
-    background-color: #409EFF;
+    background-color: #409eff;
     height: 3px;
     border-radius: 3px 3px 0 0;
   }
@@ -472,7 +568,7 @@ export default {
   margin-left: 8px;
   border-radius: 4px;
   background-color: #f0f7ff;
-  color: #409EFF;
+  color: #409eff;
   border-color: #d6e4ff;
   flex-shrink: 0;
 }
@@ -542,8 +638,8 @@ export default {
   }
 
   .renew-btn {
-    border-color: #409EFF;
-    color: #409EFF;
+    border-color: #409eff;
+    color: #409eff;
 
     &:hover {
       background-color: rgba(64, 158, 255, 0.1);
@@ -557,8 +653,8 @@ export default {
 
   .return-btn {
     &:not(.el-button--danger) {
-      border-color: #67C23A;
-      color: #67C23A;
+      border-color: #67c23a;
+      color: #67c23a;
 
       &:hover {
         background-color: rgba(103, 194, 58, 0.1);
@@ -591,11 +687,13 @@ export default {
 }
 
 /* 列表过渡动画 */
-.list-enter-active, .list-leave-active {
+.list-enter-active,
+.list-leave-active {
   transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
 }
 
-.list-enter, .list-leave-to {
+.list-enter,
+.list-leave-to {
   opacity: 0;
   transform: translateY(20px);
 }
@@ -631,8 +729,66 @@ export default {
   }
 
   .book-status {
-    margin-top: 0;
-    text-align: left;
+    margin-top: 12px;
+    width: 100%;
+    text-align: center;
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+
+      i {
+        margin-right: 4px;
+      }
+
+      &.overdue {
+        background-color: #ffebee;
+        color: #f44336;
+      }
+
+      &.normal {
+        background-color: #e8f5e9;
+        color: #4caf50;
+      }
+
+      &.returned {
+        background-color: #e3f2fd;
+        color: #2196f3;
+      }
+    }
+  }
+}
+
+/* 新增历史记录卡片样式 */
+.book-card.history-card {
+  .book-cover-container {
+    background-color: #f8f8f8;
+  }
+
+  .book-status .status-badge {
+    background-color: #e3f2fd;
+    color: #2196f3;
+  }
+
+  .book-meta {
+    .meta-row {
+      color: #666;
+    }
+  }
+}
+
+/* 调整操作按钮区域 */
+.book-actions {
+  .detail-btn {
+    border-color: #909399;
+    color: #909399;
+
+    &:hover {
+      background-color: rgba(144, 147, 153, 0.1);
+    }
   }
 }
 </style>

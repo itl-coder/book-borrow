@@ -5,15 +5,16 @@
       <el-menu
         :default-active="activeIndex"
         class="menu"
+        router
         mode="horizontal"
         @select="handleSelect"
       >
-        <el-menu-item index="1">首页</el-menu-item>
-        <el-menu-item index="2">文学小说</el-menu-item>
+        <el-menu-item index="/front/index">首页</el-menu-item>
+        <el-menu-item index="/seat">自习室</el-menu-item>
         <el-menu-item index="3">科技科普</el-menu-item>
         <el-menu-item index="4">历史哲学</el-menu-item>
         <el-menu-item index="5">计算机</el-menu-item>
-        <el-menu-item index="6">特价专区</el-menu-item>
+        <el-menu-item index="/index">进入后台</el-menu-item>
       </el-menu>
       <div v-if="showFlag" class="search-box">
         <el-input
@@ -77,12 +78,18 @@ export default {
         avatar: "",
         nickName: "",
       },
-      activeIndex: "1",
+      activeIndex: "/front/index",
       searchText: "",
     };
   },
   created() {
+    this.updateActiveIndex(this.$route.path)
     this.getLoginUserName();
+  },
+  watch: {
+    '$route'(to) {
+      this.updateActiveIndex(to.path)
+    }
   },
   methods: {
     goToLogin() {
@@ -102,8 +109,12 @@ export default {
         this.$router.push(`/borrow`)
       }
     },
-    handleSelect(key) {
-      console.log("select menu:", key);
+    updateActiveIndex(path) {
+      // 根据当前路由路径设置激活菜单项
+      this.activeIndex = path
+    },
+    handleSelect(index) {
+      this.activeIndex = index
     },
     handleSearch() {
       console.log("search:", this.searchText);
@@ -135,6 +146,7 @@ export default {
 }
 
 .logo {
+  cursor: pointer;
   font-size: 28px;
   font-weight: bold;
   color: #ff6700;
