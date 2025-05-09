@@ -519,4 +519,6 @@ export default {
 ::v-deep .room-dialog.is-fullscreen .el-dialog__body {
   max-height: none;
 }
+
+
 </style>

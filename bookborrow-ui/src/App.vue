@@ -25,7 +25,9 @@ export default {
 #app .theme-picker {
   display: none;
 }
-
+.el-dialog__header {
+  box-shadow: inset 0 -1px 0 #f5f5f5 !important;
+}
 .banner {
   width: 1200px;
   margin: 0 auto;
