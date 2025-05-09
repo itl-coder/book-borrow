@@ -1,6 +1,6 @@
 <template>
   <div class="book-borrow-container">
-    <book-header />
+    <book-header/>
     <div class="page-header">
       <div class="header-content">
         <h1 class="page-title">我的借阅</h1>
@@ -32,6 +32,7 @@
             shadow="hover"
           >
             <div class="card-content">
+              <!-- 预览图展示 -->
               <div class="book-cover-container">
                 <div class="book-cover">
                   <el-image
@@ -48,14 +49,22 @@
                     </div>
                   </el-image>
                 </div>
-                <!-- 移除逾期标签，因为历史记录不需要 -->
               </div>
-
+              <!-- 书籍信息展示 -->
               <div class="book-info">
                 <div class="info-header">
                   <h3 class="book-title">{{ book.bookName }}</h3>
-                  <el-tag class="category-tag" effect="plain" size="small">
+                  <el-tag class="category-tag" size="small">
                     {{ book.categoryName }}
+                  </el-tag>
+                  <!-- TODO: -->
+                  <!-- 只在非历史页面显示逾期标签 -->
+                  <el-tag
+                    v-if="activeTab !== 'history' && isOverdue(book.dueTime)"
+                    effect="light" size="small"
+                    type="danger"
+                  >
+                    逾期 {{ calculateOverdueDays(book.dueTime) }} 天
                   </el-tag>
                 </div>
 
@@ -63,20 +72,20 @@
                   <div class="meta-row">
                     <i class="el-icon-user meta-icon"></i>
                     <span class="meta-text"
-                      >借阅人: {{ book.userName || "匿名用户" }}</span
+                    >借阅人: {{ book.userName || "匿名用户" }}</span
                     >
                   </div>
 
                   <div class="meta-row">
                     <i class="el-icon-date meta-icon"></i>
                     <span class="meta-text"
-                      >借阅日期: {{ formatTime(book.borrowTime) }}</span
+                    >借阅日期: {{ formatTime(book.borrowTime) }}</span
                     >
                   </div>
 
                   <div class="meta-row">
                     <i class="el-icon-time meta-icon"></i>
-                    <span class="meta-text">
+                    <span>
                       {{ activeTab === "history" ? "归还日期" : "应还日期" }}:
                       {{
                         activeTab === "history"
@@ -84,16 +93,7 @@
                           : formatTime(book.dueTime)
                       }}
                     </span>
-                    <!-- 只在非历史页面显示逾期标签 -->
-                    <el-tag
-                      v-if="activeTab !== 'history' && isOverdue(book.dueTime)"
-                      class="overdue-tag"
-                      effect="dark"
-                      size="mini"
-                      type="danger"
-                    >
-                      逾期 {{ calculateOverdueDays(book.dueTime) }} 天
-                    </el-tag>
+
                   </div>
 
                   <!-- 添加借阅时长显示 -->
@@ -116,8 +116,6 @@
                   <!-- 历史记录只显示查看详情按钮 -->
                   <template v-if="activeTab === 'history'">
                     <el-button
-                      class="action-btn detail-btn"
-                      plain
                       size="small"
                       @click="handleViewDetail(book)"
                     >
@@ -130,8 +128,6 @@
                     <el-tooltip content="续借可延长30天借阅期" placement="top">
                       <el-button
                         :disabled="isOverdue(book.dueTime)"
-                        class="action-btn renew-btn"
-                        plain
                         size="small"
                         type="primary"
                         @click="handleRenew(book)"
@@ -141,14 +137,20 @@
                     </el-tooltip>
                     <el-button
                       :type="isOverdue(book.dueTime) ? 'danger' : 'success'"
-                      class="action-btn return-btn"
-                      plain
                       size="small"
                       @click="handleReturn(book)"
                     >
                       <i class="el-icon-circle-check"></i> 归还
                     </el-button>
                   </template>
+
+                  <el-button
+                    size="small"
+                    type="warning"
+                    @click="handleViewDetail(book)"
+                  >
+                    <i class="el-icon-document"></i> 查看评论
+                  </el-button>
                 </div>
               </div>
             </div>
@@ -164,7 +166,7 @@
             size="small"
             type="primary"
             @click="$router.push('/front/index')"
-            >去借书
+          >去借书
           </el-button>
         </el-empty>
       </div>
@@ -185,17 +187,18 @@
       </div>
     </div>
 
-    <YFooter />
+    <YFooter/>
   </div>
 </template>
 
 <script>
-import { listLend } from "@/api/bookinfo/lend";
+import {listLend} from "@/api/bookinfo/lend";
 import moment from "moment";
 import BookHeader from "@/views/front/book/BookHeader.vue";
 import YFooter from "@/views/components/footer/YFooter.vue";
+
 export default {
-  components: { BookHeader, YFooter },
+  components: {BookHeader, YFooter},
   data() {
     return {
       total: 0,
@@ -247,7 +250,8 @@ export default {
         .then(() => {
           this.$message.success("续借成功，借阅期已延长");
         })
-        .catch(() => {});
+        .catch(() => {
+        });
     },
     handleReturn(book) {
       const isOverdue = this.isOverdue(book.dueTime);
@@ -271,7 +275,8 @@ export default {
               : "归还申请已提交，请将书籍归还至图书馆"
           );
         })
-        .catch(() => {});
+        .catch(() => {
+        });
     },
     handleTabClick(tab) {
       this.activeTab = tab.name;
@@ -425,7 +430,7 @@ export default {
 
 .transition-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));
   gap: 24px;
 }
 
@@ -548,6 +553,10 @@ export default {
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 12px;
+
+  .el-tag {
+    margin-left: 10px;
+  }
 }
 
 .book-title {
@@ -574,7 +583,6 @@ export default {
 }
 
 .book-meta {
-  flex: 1;
   margin: 12px 0;
 }
 
@@ -589,6 +597,10 @@ export default {
   &.overdue-row {
     color: #f44336;
     font-weight: 500;
+  }
+
+  .el-tag {
+    margin-left: 20px;
   }
 }
 
@@ -777,6 +789,7 @@ export default {
     .meta-row {
       color: #666;
     }
+
   }
 }
 
