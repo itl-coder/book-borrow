@@ -5,8 +5,8 @@
       <el-menu
         :default-active="activeIndex"
         class="menu"
-        router
         mode="horizontal"
+        router
         @select="handleSelect"
       >
         <el-menu-item index="/front/index">首页</el-menu-item>
@@ -14,7 +14,7 @@
         <el-menu-item index="3">科技科普</el-menu-item>
         <el-menu-item index="4">历史哲学</el-menu-item>
         <el-menu-item index="5">计算机</el-menu-item>
-        <el-menu-item index="/index">进入后台</el-menu-item>
+        <el-menu-item index="/index" @click="reloadPage">进入后台</el-menu-item>
       </el-menu>
       <div v-if="showFlag" class="search-box">
         <el-input
@@ -43,13 +43,16 @@
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="myAppointment"
-                >我的预约</el-dropdown-item
+              >我的预约
+              </el-dropdown-item
               >
               <el-dropdown-item command="borrowHistory"
-                >借阅历史</el-dropdown-item
+              >借阅历史
+              </el-dropdown-item
               >
               <el-dropdown-item command="logout" divided
-                >退出登录</el-dropdown-item
+              >退出登录
+              </el-dropdown-item
               >
             </el-dropdown-menu>
           </el-dropdown>
@@ -92,6 +95,9 @@ export default {
     }
   },
   methods: {
+    reloadPage() {
+      window.location.href = '/index'; // 强制跳转并刷新整个页面
+    },
     goToLogin() {
       // 这里根据你的路由配置跳转到登录页
       this.$router.push("/login");
@@ -103,9 +109,10 @@ export default {
       });
     },
     handleCommand(command) {
-      if(command=='myAppointment'){
+      if (command == 'myAppointment') {
         this.$router.push("/seat")
-      }if(command=='borrowHistory'){
+      }
+      if (command == 'borrowHistory') {
         this.$router.push(`/borrow`)
       }
     },
@@ -213,6 +220,7 @@ export default {
   cursor: pointer;
   color: #409eff;
 }
+
 .login-text:hover {
   text-decoration: underline;
 }
