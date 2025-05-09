@@ -45,24 +45,24 @@
         width="70%"
       >
         <div slot="title">
-          {{ currentRoom.roomName }} - 详细信息
-          <el-tooltip
-            :content="isFullscreen ? '退出全屏' : '进入全屏' "
-            class="item"
-            effect="dark"
-            placement="top"
-          >
-            <el-button
-              :icon="
+          <div class="fullscreen-mode">
+            {{ currentRoom.roomName }} - 详细信息
+            <el-tooltip
+              :content="isFullscreen ? '退出全屏' : '进入全屏' "
+              class="item"
+              effect="light"
+              placement="top"
+            >
+              <el-button
+                :icon="
                 isFullscreen ? 'el-icon-switch-button' : 'el-icon-full-screen'
               "
-              class="fullscreen-btn"
-              type="text"
-              @click="toggleFullscreen"
-            >
-
-            </el-button>
-          </el-tooltip>
+                class="fullscreen-btn"
+                type="text"
+                @click="toggleFullscreen"
+              ></el-button>
+            </el-tooltip>
+          </div>
         </div>
 
         <div class="room-info">
@@ -484,13 +484,17 @@ export default {
 /* 对话框自定义样式 */
 ::v-deep .room-dialog {
   overflow: hidden;
+
+  .fullscreen-mode {
+    display: flex;
+    justify-content: space-between;
+
+    .fullscreen-btn {
+      margin-right: 30px;
+    }
+  }
 }
 
-::v-deep .room-dialog .el-dialog__header {
-  border-bottom: 1px solid #eee;
-  padding: 16px 60px;
-  margin: 5px;
-}
 
 ::v-deep .room-dialog .el-dialog__body {
   padding: 20px;
