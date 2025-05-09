@@ -409,6 +409,7 @@ export default {
 <style scoped>
 .library-container {
   margin: 20px;
+  transition: all .3s ease-in-out;
 }
 
 .library-card {
