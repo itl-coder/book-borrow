@@ -77,6 +77,7 @@ export default {
     this.$nextTick(() => {
       this.generateLibraryLayout();
     });
+    this.refreshRoom()
   },
   methods: {
     initCanvas() {
@@ -314,7 +315,8 @@ export default {
 
 .room-card {
   width: 100%;
-  .el-card__header{
+
+  .el-card__header {
     padding: 20px;
   }
 }
